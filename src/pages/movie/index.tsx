@@ -8,6 +8,12 @@ import Reviews from "../../components/review/Reviews";
 import { MovieDailyAudience, MovieDailyRanking, MovieDailyRevenue, MovieDetailsDto, MovieDto } from "../../api/data-contracts"; // 경로 맞춤
 import moviesApi from "../../lib/moviesApi";
 import transformStats from "./transformStats";
+import { Line } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
+import { DataPoint } from "../../components/chart/DataPoint";
+import { Dataset } from "../../components/chart/Dataset";
+
+Chart.register(...registerables);
 
 export default function Movie() {
   const location = useLocation();
@@ -55,9 +61,21 @@ export default function Movie() {
 
   const cardWidth = "450px";
   const chartHeight = "200px";
-  const chartData = transformStats(stats, 'ranking');
-  console.log("date = " + chartData.date);
-  console.log("field = " + chartData.field);
+  const dataPoints: DataPoint[] = transformStats(stats, 'ranking');
+  const dataset: { labels: string[], datasets: Dataset[] } = {
+    labels: dataPoints.map(point => point.x),
+    datasets: [
+      {
+        type: 'line',
+        label: '랭킹',
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderWidth: 2,
+        data: dataPoints.map(point => point.y),
+      },
+    ],
+  };
+  
 
   if (error) return <p>에러 발생: {error}</p>;
 
@@ -81,10 +99,11 @@ export default function Movie() {
             {movieDto && <MovieCard key={movieDto?.code} movie={movieDto} />}
 
             {/* 라인차트 표시 */}
-            <div className="w-full">
+            <div className="w-full width=" style={{ width: cardWidth, height: chartHeight}}>
               {/* {stats.length > 0 && (
                 <LineChart data={chartData} width={cardWidth} height={chartHeight} />
               )} */}
+              <Line data={dataset} />
             </div>
 
             <div className="bg-sky-200 flex flex-col items-center mt-4 mb-4">
