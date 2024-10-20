@@ -1,4 +1,4 @@
-import { Movies } from "@/api/Movies";
+import { Movies } from "../api/Movies";
 
 const moviesApiInstance = new Movies();
 
