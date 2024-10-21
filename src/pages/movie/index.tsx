@@ -60,7 +60,7 @@ export default function Movie() {
   }, [code]);
 
   const cardWidth = "450px";
-  const chartHeight = "200px";
+  const chartHeight = "250px";
   const dataPoints: DataPoint[] = transformStats(stats, 'ranking');
   const dataset: { labels: string[], datasets: Dataset[] } = {
     labels: dataPoints.map(point => point.x),
