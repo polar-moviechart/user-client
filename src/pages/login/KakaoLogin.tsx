@@ -15,5 +15,3 @@ const SocialKakao = () => {
 }
 
 export default SocialKakao;
-
-http://localhost:3000/kakaoAuth?code=lUMO72lyCrHuSLvGQU9gtVNB2ETEiN1aGkLCTcuB192d1nAOx8R7DgAAAAQKKiVTAAABkq_GY0vGDcCf5rkkeA
