@@ -9,76 +9,22 @@
  * ---------------------------------------------------------------
  */
 
-import { MovieDailyStatsResponse, MovieDetailsDto, MovieDto } from "./data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags movie-controller
-   * @name GetMovies
-   * @request GET:/api/v1/movies
+   * @tags user-controller
+   * @name KakaoLogin
+   * @request POST:/api/v1/users/login/kakao/callback
    */
-  getMovies = (
-    query?: {
-      /** @format date */
-      targetDate?: string;
-      /**
-       * @format int32
-       * @default 0
-       */
-      page?: number;
-      /**
-       * @format int32
-       * @default 10
-       */
-      size?: number;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<MovieDto[], any>({
-      path: `/api/v1/movies`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags movie-controller
-   * @name GetMovie
-   * @request GET:/api/v1/movies/{code}
-   */
-  getMovie = (code: number, params: RequestParams = {}) =>
-    this.request<MovieDetailsDto, any>({
-      path: `/api/v1/movies/${code}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags movie-controller
-   * @name GetMovieStats
-   * @request GET:/api/v1/movies/{code}/stats
-   */
-  getMovieStats = (
-    code: number,
-    query: {
-      /** @format int32 */
-      limit: number;
-      field: "RANKING" | "AUDIENCE" | "REVENUE";
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<MovieDailyStatsResponse, any>({
-      path: `/api/v1/movies/${code}/stats`,
-      method: "GET",
-      query: query,
-      format: "json",
+  kakaoLogin = (data: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/v1/users/login/kakao/callback`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
 }

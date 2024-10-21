@@ -10,7 +10,7 @@ const KakaoAuth = () => {
         if (code) {
             console.log("인증코드: " + code);
 
-            fetch('http://localhost:8080/api/kakao/callback', {
+            fetch('http://localhost:8080/api/v1/users/login/kakao/callback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
