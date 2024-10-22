@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";  // 쿼리 파라미터를 가져오기 위한 훅
 import Layout from "../../components/Layout";
-import LineChart from "../../components/LineChart";
 import StarRating from "./StarRating";
 import MovieCard from "../../components/MovieCard";
 import Reviews from "../../components/review/Reviews";
-import { MovieDailyAudience, MovieDailyRanking, MovieDailyRevenue, MovieDetailsDto, MovieDto } from "../../api/data-contracts"; // 경로 맞춤
 import moviesApi from "../../lib/moviesApi";
 import transformStats from "./transformStats";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import { DataPoint } from "../../components/chart/DataPoint";
 import { Dataset } from "../../components/chart/Dataset";
+import { MovieDailyAudience, MovieDailyRanking, MovieDailyRevenue, MovieDetailsDto } from "../../api/movie/data-contracts";
 
 Chart.register(...registerables);
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { MovieDto } from "../api/data-contracts";
 import moviesApi from "../lib/moviesApi";
 import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
+import { MovieDto } from "../api/movie/data-contracts";
 
 export default function Home() {
   const [movieDtos, setMovieDtos] = useState<MovieDto[]>([]);

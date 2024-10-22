@@ -1,4 +1,4 @@
-const SocialKakao = () => {
+const KakaoLogin = () => {
     const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
     console.log("reestApiKey = " + restApiKey);
     const redirectUrl = "http://localhost:3000/kakaoAuth"
@@ -14,4 +14,4 @@ const SocialKakao = () => {
     )
 }
 
-export default SocialKakao;
+export default KakaoLogin;

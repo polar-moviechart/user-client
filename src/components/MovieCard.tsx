@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { MovieDto } from "../api/data-contracts";
 import StarRatingSum from "./StarRatingSum";
+import { MovieDto } from "../api/movie/data-contracts";
 
 interface MovieCardProps {
   movie: MovieDto;

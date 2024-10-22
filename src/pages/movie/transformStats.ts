@@ -1,4 +1,4 @@
-import { MovieDailyAudience, MovieDailyRanking, MovieDailyRevenue, MovieDailyStat } from "../../api/data-contracts"
+import { MovieDailyStat } from "../../api/movie/data-contracts";
 import { DataPoint } from "../../components/chart/DataPoint";
 
 const transformStats = (stats: MovieDailyStat[], type: 'ranking' | 'audience' | 'revenue'): DataPoint[] => {
