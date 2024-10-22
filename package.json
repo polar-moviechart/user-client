@@ -25,8 +25,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "generate:api-movie": "swagger-typescript-api -p http://localhost:8080/v3/api-docs -o ./src/api --modular --axios",
-    "generate:api-user": "swagger-typescript-api -p http://localhost:8081/v3/api-docs -o ./src/api --modular --axios",
+    "generate:api-movie": "swagger-typescript-api -p http://localhost:8081/v3/api-docs -o ./src/api/movie --modular --axios",
+    "generate:api-user": "swagger-typescript-api -p http://localhost:8082/v3/api-docs -o ./src/api/user --modular --axios",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

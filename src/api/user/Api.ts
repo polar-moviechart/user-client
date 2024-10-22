@@ -9,6 +9,7 @@
  * ---------------------------------------------------------------
  */
 
+import { CustomResponseTokenResponse, KakaoCodeDto } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -19,12 +20,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name KakaoLogin
    * @request POST:/api/v1/users/login/kakao/callback
    */
-  kakaoLogin = (data: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+  kakaoLogin = (data: KakaoCodeDto, params: RequestParams = {}) =>
+    this.request<CustomResponseTokenResponse, any>({
       path: `/api/v1/users/login/kakao/callback`,
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
       ...params,
     });
 }

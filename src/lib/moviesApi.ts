@@ -1,5 +1,5 @@
-import { Movies } from "../api/Movies";
+import { Api } from "../api/movie/Api";
 
-const moviesApiInstance = new Movies();
+const moviesApiInstance = new Api();
 
 export default moviesApiInstance;
