@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import usersApi from "../../lib/usersApi";
+import { KakaoCodeDto } from "../../api/user/data-contracts";
 
 const KakaoAuth = () => {
     const location = useLocation();
@@ -9,23 +11,19 @@ const KakaoAuth = () => {
     useEffect(() => {
         if (code) {
             console.log("인증코드: " + code);
+            const fetchLogin = async () => {
+                try {
+                    const kakaoCodeDto: KakaoCodeDto = { code };
+                    const response = await usersApi.kakaoLogin(kakaoCodeDto);
+                    console.log('서버 응답: ', response);
+                } catch (error) {
+                    console.log('에러 발생: ', error);
+                }
+            };
 
-            fetch('http://localhost:8080/api/v1/users/login/kakao/callback', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ code }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('서버 응답: ', data);
-                })
-                .catch(error => {
-                    console.error('에러 발생: ', error);
-                });
+            fetchLogin();
         }
-    }, [code]);
+    }, [code]);ç
 
     return (
         <div>
