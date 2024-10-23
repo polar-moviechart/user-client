@@ -9,8 +9,9 @@
  * ---------------------------------------------------------------
  */
 
-export interface KakaoCodeDto {
-  code?: string;
+export interface KakaoUserInfoDto {
+  /** @format int64 */
+  id?: number;
 }
 
 export interface CustomResponseTokenResponse {
