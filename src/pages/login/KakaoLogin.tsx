@@ -1,7 +1,6 @@
 const KakaoLogin = () => {
     const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
-    console.log("reestApiKey = " + restApiKey);
-    const redirectUrl = "http://localhost:3000/kakaoAuth"
+    const redirectUrl = "http://localhost:8082/api/v1/users/kakao/login/callback";
 
     const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectUrl}&response_type=code`;
     const handleLogin = () => {

@@ -1,35 +1,44 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import usersApiInstance from "../../lib/usersApi";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import usersApi from "../../lib/usersApi";
-import { KakaoCodeDto } from "../../api/user/data-contracts";
+import { KakaoUserInfoDto, TokenResponse } from "../../api/user/data-contracts";
+import Cookies from "js-cookie";
 
 const KakaoAuth = () => {
     const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-    const code = searchParams.get('code');
+    const navigate = useNavigate();
+    const searchParam = new URLSearchParams(location.search);
 
+    const kakaoUserId = Number(searchParam.get('id') ?? '0');
+    if (kakaoUserId === 0) {
+        throw new Error("카카오 로그인 중 문제가 발생했습니다.");
+    }
+
+    const userApi = usersApiInstance;
     useEffect(() => {
-        if (code) {
-            console.log("인증코드: " + code);
-            const fetchLogin = async () => {
-                try {
-                    const kakaoCodeDto: KakaoCodeDto = { code };
-                    const response = await usersApi.kakaoLogin(kakaoCodeDto);
-                    console.log('서버 응답: ', response);
-                } catch (error) {
-                    console.log('에러 발생: ', error);
-                }
+        const loginKakao = async (id) => {
+            const kakaoUserInfoDto: KakaoUserInfoDto = {
+                id: kakaoUserId
+            }
+            const response = await userApi.kakaoLogin(kakaoUserInfoDto)
+            const body: TokenResponse = {
+                accessToken: response.data?.data?.accessToken ?? '',
+                refreshToken: response.data?.data?.refreshToken ?? ''
             };
+            Cookies.set('polar-ark', body.accessToken || '', { expires: 7 });
+            Cookies.set('polar-rtk', body.refreshToken || '', { expires: 7 });
 
-            fetchLogin();
-        }
-    }, [code]);ç
+            navigate('/');
+        };
+        loginKakao(kakaoUserId);
+    }, [kakaoUserId, navigate]);
 
     return (
         <div>
-            <h1>Kakao 인증 중...</h1>
+            <h1>카카로 로그인 인증 중 입니다.</h1>
         </div>
-    );
+    )
 };
+
 
 export default KakaoAuth;
