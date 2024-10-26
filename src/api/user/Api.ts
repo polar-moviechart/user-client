@@ -32,7 +32,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   /**
    * No description
    *
-   * @tags ka-kao-login-controller
+   * @tags kakao-auth-controller
    * @name GetKakaoExternalId
    * @request GET:/api/v1/users/kakao/login/callback
    */
