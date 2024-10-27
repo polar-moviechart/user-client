@@ -1,0 +1,43 @@
+.menu {
+    position: fixed;
+    padding: 20px;
+
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    transform: translateX(100%);
+    z-index: 1001;
+    transition: transform 0.3s ease-in-out;
+}
+
+.menu li {
+    padding: 10px;
+    border-bottom: 1px solid silver;
+    text-align: center;
+}
+
+.menu span {
+    align-self: flex-start;
+    padding: 3px;
+    border: 1px solid silver;
+}
+
+.menu li:last-child {
+    border-bottom: none;
+}
+
+.menu.open {
+    transform: translateX(0);
+}
+
+.menu-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
