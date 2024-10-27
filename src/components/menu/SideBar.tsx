@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import './Menu.css';
+import { Link } from "react-router-dom";
 
 const SideBar = ({ width = 280 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,9 +27,15 @@ const SideBar = ({ width = 280 }) => {
                         ? <span onClick={toggleMenu}> X 닫기 </span>
                         : null
                     }
-                    <li>로그인</li>
-                    <li>리뷰 목록</li>
-                    <li>내 영화</li>
+                    <li>
+                        <Link to="/login">로그인</Link>
+                    </li>
+                    <li>
+                        <Link to="/myReview">내 리뷰</Link>
+                    </li>
+                    <li>
+                        <Link to="myMovie">내 영화</Link>
+                    </li>
                 </ul>
             </div>
         </div>
