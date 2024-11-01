@@ -31,10 +31,10 @@ const SideBar = ({ width = 280 }) => {
                         <Link to="/login">로그인</Link>
                     </li>
                     <li>
-                        <Link to="/myReview">내 리뷰</Link>
+                        <Link to="/myReviews">내 리뷰</Link>
                     </li>
                     <li>
-                        <Link to="myMovie">내 영화</Link>
+                        <Link to="myMovies">내 영화</Link>
                     </li>
                 </ul>
             </div>

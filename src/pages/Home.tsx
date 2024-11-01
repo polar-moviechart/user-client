@@ -1,35 +1,38 @@
 import { useEffect, useState } from "react";
-import moviesApi from "../lib/moviesApi";
 import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
-import { MovieDto } from "../api/movie/data-contracts";
+import { MovieInfoDto } from "../interfaces/MovieInfoDto";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Home() {
-  const [movieDtos, setMovieDtos] = useState<MovieDto[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [movieInfos, setmovieInfos] = useState<MovieInfoDto[]>([]);
 
   const targetDate: string = '2004-01-01';
+  const atk = Cookies.get('polar-atk');
+  console.log("atk = " + atk);
 
   useEffect(() => {
     const fetchMovies = async () => {
-      try {
-        const response = await moviesApi.getMovies({
-          targetDate: targetDate,
-          page: 0,
-          size: 10,
-        });
+      const response = await axios.get(
+        `${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies`,
+        {
+          params: {
+            targetDate: targetDate,
+            page: 0,
+            size: 10,
+          },
+          headers: {
+            Authorization: atk ? `Bearer ${atk}` : undefined,
+          }
+        }
+      );
 
-        const movieDtos: MovieDto[] = response.data;
-        setMovieDtos(movieDtos);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
-      }
+      setmovieInfos(response.data.data);
     };
 
     fetchMovies();
   }, [targetDate]);
-
-  if (error) return <p>에러 발생: {error}</p>;
 
   return (
     <Layout>
@@ -44,8 +47,8 @@ export default function Home() {
           </button>
         </div>
         <div className="flex flex-col items-center space-y-8 mt-8">
-          {movieDtos && movieDtos.map((movieDto) => (
-            <MovieCard key={movieDto.code} movie={movieDto} />
+          {movieInfos && movieInfos.map((movieInfo) => (
+            <MovieCard key={movieInfo.code} movie={movieInfo} />
           ))}
         </div>
       </div>

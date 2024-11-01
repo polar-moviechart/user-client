@@ -1,25 +1,14 @@
 import { Link } from "react-router-dom";
 import StarRatingSum from "./StarRatingSum";
-import { MovieDto } from "../api/movie/data-contracts";
+import { MovieInfoDto } from "../interfaces/MovieInfoDto";
 
 interface MovieCardProps {
-  movie: MovieDto;
+  movie: MovieInfoDto;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
 
-  const {
-    code,
-    ranking,
-    title,
-    poster,
-    details,
-    releaseDate,
-    productionYear,
-    movieDirectorDtos,
-    movieLeadactorDtos,
-  } = movie;
-
+  const { poster,  movieDirectorDtos: movieDirectorDtos, movieLeadactorDtos: movieLeadactorDtos } = movie;
   const rating = 10;
 
   const defaultPoster = "/empty_image.jpg";
@@ -29,7 +18,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       {/*제목*/}
       <div className="flex mb-2 w-full">
         <h3 className="text-gray-500 font-bold text-lg flex flex-grow">
-          {ranking}. {title}
+          {movie.ranking}. {movie.title}
         </h3>
       </div>
       {/* 별점과 평점 */}
@@ -42,11 +31,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       <div className="bg-red-500 flex">
         {/* 이미지 */}
         <Link
-          to={`/movie?code=${code}`}
+          to={`/movie?code=${movie.code}`}
         >
           <img
             src={poster && poster.length > 0 ? poster[0] : defaultPoster}
-            alt={title}
+            alt={movie.title}
             className="rounded-md"
           />
         </Link>
@@ -55,9 +44,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       {/* 텍스트 정보 */}
       {/* 추가 정보 */}
       <div className="bg-lime-300 text-sm text-gray-700 text-left p-2 flex-grow w-full">
-        <p><strong>영화 정보:</strong> {details}</p>
-        <p><strong>개봉일:</strong> {releaseDate}</p>
-        <p><strong>제작연도:</strong> {productionYear}</p>
+        <p><strong>영화 정보:</strong> {movie.details}</p>
+        <p><strong>개봉일:</strong> {movie.releaseDate}</p>
+        <p><strong>제작연도:</strong> {movie.productionYear}</p>
         <p>
           <strong>감독: </strong>
           {movieDirectorDtos?.map((d, index) => (

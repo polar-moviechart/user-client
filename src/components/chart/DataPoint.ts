@@ -1,4 +1,4 @@
 export interface DataPoint {
-    x: string;
+    x: Date;
     y: number;
 }

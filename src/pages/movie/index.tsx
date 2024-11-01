@@ -4,13 +4,17 @@ import Layout from "../../components/Layout";
 import StarRating from "./StarRating";
 import MovieCard from "../../components/MovieCard";
 import Reviews from "../../components/review/Reviews";
-import moviesApi from "../../lib/moviesApi";
 import transformStats from "./transformStats";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import { DataPoint } from "../../components/chart/DataPoint";
 import { Dataset } from "../../components/chart/Dataset";
-import { MovieDailyAudience, MovieDailyRanking, MovieDailyRevenue, MovieDetailsDto } from "../../api/movie/data-contracts";
+import { MovieInfoDto } from "../../interfaces/MovieInfoDto";
+import { MovieDailyAudience } from "../../interfaces/MovieDailyAudience";
+import { MovieDailyRanking } from "../../interfaces/MovieDailyRanking";
+import { MovieDailyRevenue } from "../../interfaces/MovieDailyRevenue";
+import { ApiResponse } from "../../interfaces/ApiResponse";
+import axios from "axios";
 
 Chart.register(...registerables);
 
@@ -19,49 +23,43 @@ export default function Movie() {
   const searchParams = new URLSearchParams(location.search); // URL에서 쿼리 파라미터를 가져옴
   const code: number = Number(searchParams.get('code'));     // URL에서 'code' 파라미터 가져오기
 
-  const [movieDto, setMovieDto] = useState<MovieDetailsDto | null>(null);
+  const [movieInfoDto, setMovieInfoDto] = useState<MovieInfoDto | null>(null);
   type MovieDailyStat = MovieDailyAudience | MovieDailyRanking | MovieDailyRevenue;
-  const [stats, setStats] = useState<MovieDailyStat[]>([]);
+  const [movieDailyStats, setMovieDailyStats] = useState<MovieDailyStat[]>([]);
 
   const [ratingValue, setRatingValue] = useState(0); // 별점 값을 저장하는 state 추가
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMovie = async () => {
-      try {
-        const movieResponse = await moviesApi.getMovie(code);
-        setMovieDto(movieResponse.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
-      }
+      const movieResponse = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}`)
+      const data: MovieInfoDto = movieResponse.data;
+      setMovieInfoDto(data);
     };
-    if (code) {
-      fetchMovie();
-    }
+
+    fetchMovie();
   }, [code]);
 
   useEffect(() => {
-    const fetchMovieStats = async () => {
-      try {
-        const statsResponse = await moviesApi.getMovieStats(code, {
-          limit: 10,
-          field: 'RANKING',
-        });
-        const dailyStatsDtos = statsResponse.data.dailyStatsDtos || [];
-        setStats(dailyStatsDtos);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
-      }
+    const fetchMovieDailyStats = async () => {
+      const movieDailyStats: ApiResponse<MovieDailyStat[]> = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}/stats}`,
+        {
+          params: {
+            limit: 10,
+            field: 'RANKING'
+          }
+        }
+      );
+      setMovieDailyStats(movieDailyStats.data);
     };
-    if (code) {
-      fetchMovieStats();
-    }
-  }, [code]);
+
+    fetchMovieDailyStats();
+  }, []);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
-  const dataPoints: DataPoint[] = transformStats(stats, 'ranking');
-  const dataset: { labels: string[], datasets: Dataset[] } = {
+  const dataPoints: DataPoint[] = transformStats(movieDailyStats, 'ranking');
+  const dataset: { labels: Date[], datasets: Dataset[] } = {
     labels: dataPoints.map(point => point.x),
     datasets: [
       {
@@ -78,7 +76,6 @@ export default function Movie() {
 
   if (error) return <p>에러 발생: {error}</p>;
 
-  console.log(movieDto);
   return (
     <Layout>
       <div className="min-h-screen bg-gray-100">
@@ -95,7 +92,7 @@ export default function Movie() {
         <div className="bg-lime-50 flex justify-center">
           {/* 영화 카드 섹션 */}
           <div className="bg-gray-200 flex flex-col items-center">
-            {movieDto && <MovieCard key={movieDto?.code} movie={movieDto} />}
+            {movieInfoDto && <MovieCard key={movieInfoDto?.code} movie={movieInfoDto} />}
 
             {/* 라인차트 표시 */}
             <div className="w-full width=" style={{ width: cardWidth, height: chartHeight}}>
