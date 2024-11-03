@@ -13,8 +13,10 @@ import { MovieInfoDto } from "../../interfaces/MovieInfoDto";
 import { MovieDailyAudience } from "../../interfaces/MovieDailyAudience";
 import { MovieDailyRanking } from "../../interfaces/MovieDailyRanking";
 import { MovieDailyRevenue } from "../../interfaces/MovieDailyRevenue";
-import { ApiResponse } from "../../interfaces/ApiResponse";
 import axios from "axios";
+import { StatType } from "../../type/StatType";
+import { ApiResponse } from "../../interfaces/ApiResponse";
+import { MovieDailyStatsMap } from "../../interfaces/MovieDailyStatsMap";
 
 Chart.register(...registerables);
 
@@ -30,11 +32,18 @@ export default function Movie() {
   const [ratingValue, setRatingValue] = useState(0); // 별점 값을 저장하는 state 추가
   const [error, setError] = useState<string | null>(null);
 
+  const statType: StatType = 'RANKING';
+
+  type MovieDailyStatsType<T extends StatType> = 
+  T extends "RANKING" ? MovieDailyRanking[] :
+  T extends "AUDIENCE" ? MovieDailyAudience[] :
+  T extends "REVENUE" ? MovieDailyRevenue[] :
+  never;
+
   useEffect(() => {
     const fetchMovie = async () => {
-      const movieResponse = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}`)
-      const data: MovieInfoDto = movieResponse.data;
-      setMovieInfoDto(data);
+      const response = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}`)
+      setMovieInfoDto(response.data.data);
     };
 
     fetchMovie();
@@ -42,15 +51,17 @@ export default function Movie() {
 
   useEffect(() => {
     const fetchMovieDailyStats = async () => {
-      const movieDailyStats: ApiResponse<MovieDailyStat[]> = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}/stats}`,
+      const response = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}/stats`,
         {
           params: {
             limit: 10,
-            field: 'RANKING'
+            field: statType
           }
         }
       );
-      setMovieDailyStats(movieDailyStats.data);
+
+      const movieDailyStats = response.data.data.dailyStatsDtos as MovieDailyStatsType<typeof statType>;
+      setMovieDailyStats(movieDailyStats);
     };
 
     fetchMovieDailyStats();
@@ -58,7 +69,7 @@ export default function Movie() {
 
   const cardWidth = "450px";
   const chartHeight = "250px";
-  const dataPoints: DataPoint[] = transformStats(movieDailyStats, 'ranking');
+  const dataPoints: DataPoint[] = transformStats(movieDailyStats as MovieDailyStatsMap[typeof statType], statType);
   const dataset: { labels: Date[], datasets: Dataset[] } = {
     labels: dataPoints.map(point => point.x),
     datasets: [
