@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
-import axios from "axios";
+import { useApiFetch } from "../../hooks/FetchApiFunc";
+import { UserApiService } from "../../apis/user/UserApiService";
 
 const KakaoAuth = () => {
     const location = useLocation();
@@ -13,40 +14,24 @@ const KakaoAuth = () => {
         throw new Error("카카오 로그인 중 문제가 발생했습니다.");
     }
 
-
+    const { data: loginResponse, loading, error } = useApiFetch(() =>
+        UserApiService.loginKakao(kakaoUserId)
+    );
 
     useEffect(() => {
-        const loginKakao = async (id) => {
-            try {
-                const kakaoUserInfoDto = { id: kakaoUserId };
-                console.log("kakaoUserId = " + kakaoUserId);
+        if (loginResponse) {
+            const accessToken = loginResponse.accessToken || '';
+            const refreshToken = loginResponse.refreshToken || '';
 
-                // axios로 직접 user-service의 로그인 API 호출
-                const response = await axios.post(
-                    `${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/users/login/kakao`,
-                    kakaoUserInfoDto,
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-                );
+            Cookies.set('polar-atk', accessToken, { expires: 7 });
+            Cookies.set('polar-rtk', refreshToken, { expires: 7 });
 
-                const body = response.data.data;
-                const accessToken = body.accessToken || '';
-                const refreshToken = body.refreshToken || '';
+            navigate('/');
+        }
+    }, [loginResponse, navigate])
 
-                Cookies.set('polar-atk', accessToken, { expires: 7 });
-                Cookies.set('polar-rtk', refreshToken, { expires: 7 });
-
-                navigate('/');
-            } catch (error) {
-                console.error("로그인 중 에러가 발생했습니다:", error);
-            }
-        };
-
-        loginKakao(kakaoUserId);
-    }, [kakaoUserId, navigate]);
+    if (loading) return <div>로딩 중 입니다.</div>;
+    if (error) return <div>{error}</div>;
 
     return (
         <div>

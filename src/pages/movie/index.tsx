@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";  // 쿼리 파라미터를 가져오기 위한 훅
 import Layout from "../../components/Layout";
 import StarRating from "./StarRating";
@@ -9,67 +9,49 @@ import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import { DataPoint } from "../../components/chart/DataPoint";
 import { Dataset } from "../../components/chart/Dataset";
-import { MovieInfoDto } from "../../interfaces/MovieInfoDto";
-import { MovieDailyAudience } from "../../interfaces/MovieDailyAudience";
-import { MovieDailyRanking } from "../../interfaces/MovieDailyRanking";
-import { MovieDailyRevenue } from "../../interfaces/MovieDailyRevenue";
-import axios from "axios";
-import { StatType } from "../../type/StatType";
-import { ApiResponse } from "../../interfaces/ApiResponse";
-import { MovieDailyStatsMap } from "../../interfaces/MovieDailyStatsMap";
+import { StatType } from "../../apis/movie/type/StatType";
+import { useApiFetch } from "../../hooks/FetchApiFunc";
+import { MovieApiService } from "../../apis/movie/MovieApiService";
+import Cookies from "js-cookie";
+import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
+import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
 
 Chart.register(...registerables);
 
 export default function Movie() {
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search); // URL에서 쿼리 파라미터를 가져옴
-  const code: number = Number(searchParams.get('code'));     // URL에서 'code' 파라미터 가져오기
+  const searchParams = new URLSearchParams(location.search);
+  const code: string = searchParams.get('code') || '';
 
-  const [movieInfoDto, setMovieInfoDto] = useState<MovieInfoDto | null>(null);
-  type MovieDailyStat = MovieDailyAudience | MovieDailyRanking | MovieDailyRevenue;
-  const [movieDailyStats, setMovieDailyStats] = useState<MovieDailyStat[]>([]);
+  const [movieInfo, setMovieInfo] = useState<MovieInfoDto | null>(null);
+  const [movieStats, setMovieStats] = useState<MovieStats[]>([]);
 
   const [ratingValue, setRatingValue] = useState(0); // 별점 값을 저장하는 state 추가
-  const [error, setError] = useState<string | null>(null);
+
 
   const statType: StatType = 'RANKING';
 
-  type MovieDailyStatsType<T extends StatType> = 
-  T extends "RANKING" ? MovieDailyRanking[] :
-  T extends "AUDIENCE" ? MovieDailyAudience[] :
-  T extends "REVENUE" ? MovieDailyRevenue[] :
-  never;
+  const fetchMovie = useCallback(() => MovieApiService.getMovie(code, Cookies.get('polar-atk') || ''), [code]);
+  const fetchStats = useCallback(() => MovieApiService.getMovieStats(code, statType, 30), [code, statType]);
+
+  const { data: movieData, loading: movieLoading, error: movieError } = useApiFetch(fetchMovie);
+  const { data: statData, loading: statLoading, error: statError } = useApiFetch(fetchStats);
 
   useEffect(() => {
-    const fetchMovie = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}`)
-      setMovieInfoDto(response.data.data);
-    };
-
-    fetchMovie();
-  }, [code]);
+    if (movieData) {
+      setMovieInfo(movieData);
+    }
+  }, [movieData]);
 
   useEffect(() => {
-    const fetchMovieDailyStats = async () => {
-      const response = await axios.get(`${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}/stats`,
-        {
-          params: {
-            limit: 10,
-            field: statType
-          }
-        }
-      );
-
-      const movieDailyStats = response.data.data.dailyStatsDtos as MovieDailyStatsType<typeof statType>;
-      setMovieDailyStats(movieDailyStats);
-    };
-
-    fetchMovieDailyStats();
-  }, []);
+    if (statData) {
+      setMovieStats(statData.statDtos)
+    }
+  }, [statData]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
-  const dataPoints: DataPoint[] = transformStats(movieDailyStats as MovieDailyStatsMap[typeof statType], statType);
+  const dataPoints: DataPoint[] = transformStats(movieStats);
   const dataset: { labels: Date[], datasets: Dataset[] } = {
     labels: dataPoints.map(point => point.x),
     datasets: [
@@ -83,9 +65,10 @@ export default function Movie() {
       },
     ],
   };
-  
 
-  if (error) return <p>에러 발생: {error}</p>;
+  if (movieError) return <p>{movieError}</p>
+  if (statError) return <p>{statError}</p>
+  if (movieLoading || statLoading) return <p>로딩 중입니다.</p>;
 
   return (
     <Layout>
@@ -103,10 +86,10 @@ export default function Movie() {
         <div className="bg-lime-50 flex justify-center">
           {/* 영화 카드 섹션 */}
           <div className="bg-gray-200 flex flex-col items-center">
-            {movieInfoDto && <MovieCard key={movieInfoDto?.code} movie={movieInfoDto} />}
+            {movieInfo && <MovieCard key={movieInfo?.code} movie={movieInfo} />}
 
             {/* 라인차트 표시 */}
-            <div className="w-full width=" style={{ width: cardWidth, height: chartHeight}}>
+            <div className="w-full width=" style={{ width: cardWidth, height: chartHeight }}>
               {/* {stats.length > 0 && (
                 <LineChart data={chartData} width={cardWidth} height={chartHeight} />
               )} */}
@@ -115,7 +98,7 @@ export default function Movie() {
 
             <div className="bg-sky-200 flex flex-col items-center mt-4 mb-4">
               <p className="text-black">평점을 입력해주세요.</p>
-              <StarRating />
+              <StarRating code={Number(code)} initialRating={0} />
             </div>
           </div>
         </div>

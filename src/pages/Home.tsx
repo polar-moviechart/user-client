@@ -1,38 +1,22 @@
-import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
-import { MovieInfoDto } from "../interfaces/MovieInfoDto";
-import axios from "axios";
 import Cookies from "js-cookie";
+import { MovieApiService } from "../apis/movie/MovieApiService";
+import { useApiFetch } from "../hooks/FetchApiFunc";
+import { useCallback } from "react";
 
 export default function Home() {
-  const [movieInfos, setmovieInfos] = useState<MovieInfoDto[]>([]);
-
   const targetDate: string = '2004-01-01';
-  const atk = Cookies.get('polar-atk');
-  console.log("atk = " + atk);
+  const atk: string = Cookies.get('polar-atk') || '';
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies`,
-        {
-          params: {
-            targetDate: targetDate,
-            page: 0,
-            size: 10,
-          },
-          headers: {
-            Authorization: atk ? `Bearer ${atk}` : undefined,
-          }
-        }
-      );
+  const fetchMovies = useCallback(() => {
+    return MovieApiService.getMovies(targetDate, atk);
+  }, [targetDate, atk]);
 
-      setmovieInfos(response.data.data);
-    };
+  const { data: movieInfos, loading, error } = useApiFetch(fetchMovies);
 
-    fetchMovies();
-  }, [targetDate]);
+  if (loading) return <div>로딩 중 입니다.</div>;
+  if (error) return <div>{error}</div>
 
   return (
     <Layout>
