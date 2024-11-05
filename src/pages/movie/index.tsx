@@ -28,7 +28,6 @@ export default function Movie() {
 
   const [ratingValue, setRatingValue] = useState(0); // 별점 값을 저장하는 state 추가
 
-
   const statType: StatType = 'RANKING';
 
   const fetchMovie = useCallback(() => MovieApiService.getMovie(code, Cookies.get('polar-atk') || ''), [code]);

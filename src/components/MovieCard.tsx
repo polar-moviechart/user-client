@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import StarRatingSum from "./StarRatingSum";
-import { MovieInfoDto } from "../interfaces/MovieInfoDto";
+import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 
 interface MovieCardProps {
   movie: MovieInfoDto;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-
   const { poster,  movieDirectorDtos: movieDirectorDtos, movieLeadactorDtos: movieLeadactorDtos } = movie;
   const rating = 10;
 

@@ -1,8 +1,6 @@
 import { fetchWithErrorHandling } from "../ApiServiceBase";
-import { ApiResponse } from "../ApiResponse";
 import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 import { StatType } from "./type/StatType";
-import { MovieStats } from "./interfaces/MovieStats";
 import { MovieStatDto } from "./interfaces/MovieStatDto";
 
 export class MovieApiService {
