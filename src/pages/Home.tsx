@@ -1,7 +1,7 @@
 import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
 import Cookies from "js-cookie";
-import { MovieApiService } from "../apis/movie/MovieApiService";
+import { MovieApiServicePublic } from "../apis/movie/MovieApiServicePublic";
 import { useApiFetch } from "../hooks/FetchApiFunc";
 import { useCallback } from "react";
 
@@ -10,7 +10,7 @@ export default function Home() {
   const atk: string = Cookies.get('polar-atk') || '';
 
   const fetchMovies = useCallback(() => {
-    return MovieApiService.getMovies(targetDate, atk);
+    return MovieApiServicePublic.getMovies(targetDate, atk);
   }, [targetDate, atk]);
 
   const { data: movieInfos, loading, error } = useApiFetch(fetchMovies);

@@ -3,15 +3,15 @@ import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 import { StatType } from "./type/StatType";
 import { MovieStatDto } from "./interfaces/MovieStatDto";
 
-export class MovieApiService {
-    private static instatnce: MovieApiService | null = null;
-    private static baseURL = process.env.REACT_APP_EDGE_SERVICE_URL + "/api/v1/movies";
+export class MovieApiServicePublic {
+    private static instatnce: MovieApiServicePublic | null = null;
+    private static baseURL = process.env.REACT_APP_EDGE_SERVICE_URL + "/public/api/v1/movies";
 
     constructor() {
-        if (!MovieApiService.instatnce) {
-            MovieApiService.instatnce = new MovieApiService();
+        if (!MovieApiServicePublic.instatnce) {
+            MovieApiServicePublic.instatnce = new MovieApiServicePublic();
         }
-        return MovieApiService.instatnce;
+        return MovieApiServicePublic.instatnce;
     }
 
 
@@ -24,6 +24,7 @@ export class MovieApiService {
                 headers: { Authorization: atk ? `Bearer ${atk}` : undefined }
             }
         );
+        console.log("edge-service-url = ", this.baseURL);
         return response;
     }
 

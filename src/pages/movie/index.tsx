@@ -11,7 +11,7 @@ import { DataPoint } from "../../components/chart/DataPoint";
 import { Dataset } from "../../components/chart/Dataset";
 import { StatType } from "../../apis/movie/type/StatType";
 import { useApiFetch } from "../../hooks/FetchApiFunc";
-import { MovieApiService } from "../../apis/movie/MovieApiService";
+import { MovieApiServicePublic } from "../../apis/movie/MovieApiServicePublic";
 import Cookies from "js-cookie";
 import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
@@ -30,8 +30,8 @@ export default function Movie() {
 
   const statType: StatType = 'RANKING';
 
-  const fetchMovie = useCallback(() => MovieApiService.getMovie(code, Cookies.get('polar-atk') || ''), [code]);
-  const fetchStats = useCallback(() => MovieApiService.getMovieStats(code, statType, 30), [code, statType]);
+  const fetchMovie = useCallback(() => MovieApiServicePublic.getMovie(code, Cookies.get('polar-atk') || ''), [code]);
+  const fetchStats = useCallback(() => MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
 
   const { data: movieData, loading: movieLoading, error: movieError } = useApiFetch(fetchMovie);
   const { data: statData, loading: statLoading, error: statError } = useApiFetch(fetchStats);

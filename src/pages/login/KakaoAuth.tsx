@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useApiFetch } from "../../hooks/FetchApiFunc";
-import { UserApiService } from "../../apis/user/UserApiService";
+import { UserApiServicePublic } from "../../apis/user/UserApiServicePublic";
 
 const KakaoAuth = () => {
     const location = useLocation();
@@ -15,7 +15,7 @@ const KakaoAuth = () => {
     }
 
     const { data: loginResponse, loading, error } = useApiFetch(() =>
-        UserApiService.loginKakao(kakaoUserId)
+        UserApiServicePublic.loginKakao(kakaoUserId)
     );
 
     useEffect(() => {

@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { useState } from "react"
 import StarInput from "./StarInput";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const Base = styled.section`
   display: flex;
@@ -34,11 +36,31 @@ const RatingField = styled.fieldset`
   }
 `;
 
-const StarRating = () => {
-  const [rating, setRating] = useState(0);
+interface StarRatingProps {
+  code: number,
+  initialRating?: number;
+}
 
-  const handleClickRating = (value) => {
+const StarRating: React.FC<StarRatingProps> = ({ code, initialRating = 0 }) => {
+  const [rating, setRating] = useState(initialRating);
+
+  const handleClickRating = (value: number) => {
+    const fetchMovieRating = async () => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_EDGE_SERVICE_URL}/api/v1/movies/${code}/rating`,
+        {
+          code: code,
+          rating: rating
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('polar-atk')}`
+          }
+        }
+      )
+    }
     setRating(value);
+    fetchMovieRating()
   };
 
   return (
