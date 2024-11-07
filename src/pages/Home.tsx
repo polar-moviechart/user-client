@@ -4,10 +4,11 @@ import Cookies from "js-cookie";
 import { MovieApiServicePublic } from "../apis/movie/MovieApiServicePublic";
 import { useApiFetch } from "../hooks/FetchApiFunc";
 import { useCallback } from "react";
+import { useJwtTokens } from "../hooks/useJwtTokens";
 
 export default function Home() {
+  const { atk: atk, rtk: rtk } = useJwtTokens();
   const targetDate: string = '2004-01-01';
-  const atk: string = Cookies.get('polar-atk') || '';
 
   const fetchMovies = useCallback(() => {
     return MovieApiServicePublic.getMovies(targetDate, atk);
