@@ -2,6 +2,7 @@ import { fetchWithErrorHandling } from "../ApiServiceBase";
 import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 import { StatType } from "./type/StatType";
 import { MovieStatDto } from "./interfaces/MovieStatDto";
+import { getAuthHeaders } from "../../utils/authUtils";
 
 export class MovieApiServicePublic {
     private static instatnce: MovieApiServicePublic | null = null;
@@ -15,33 +16,26 @@ export class MovieApiServicePublic {
     }
 
 
-    static async getMovies(targetDate: string, atk: string | null) {
+    static async getMovies(targetDate: string, atk: string | undefined) {
         const response = await fetchWithErrorHandling<MovieInfoDto[]>(
             `${this.baseURL}`,
             "GET",
             {
                 params: { targetDate, page: 0, size: 10 },
-                headers: { Authorization: atk ? `Bearer ${atk}` : undefined }
+                headers: getAuthHeaders(atk)
             }
         );
-        console.log("edge-service-url = ", this.baseURL);
+        console.log("headers = ", getAuthHeaders(atk));
         return response;
     }
 
-    static async getMovie(code: string, atk: string | null) {
+    static async getMovie(code: string, atk: string | undefined) {
         const response = await fetchWithErrorHandling<MovieInfoDto>(
             `${this.baseURL}/${code}`,
             "GET",
-            { headers: { Authorization: atk ? `Bearer ${atk}` : undefined } }
-        );
-        
-        return response;
-    }
-
-    static async getMovieRating(code: string) {
-        const response = await fetchWithErrorHandling<string>(
-            `${this.baseURL}/${code}/rating`,
-            "GET"
+            {
+                headers: getAuthHeaders(atk)
+            }
         );
         
         return response;

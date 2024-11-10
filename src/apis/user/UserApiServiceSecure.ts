@@ -1,6 +1,6 @@
 import { fetchWithErrorHandling } from "../ApiServiceBase"
 import { ApiResponse } from "../ApiResponse";
-import { LoginResponse } from "./interfaces/LoginResponse";
+import { getAuthHeaders } from "../../utils/authUtils";
 
 export class UserApiServiceSecure {
     private static instance: UserApiServiceSecure | null = null;
@@ -13,11 +13,11 @@ export class UserApiServiceSecure {
         return UserApiServiceSecure.instance;
     }
 
-    static async generateToken(rtk: string) {
-        const response = await fetchWithErrorHandling<ApiResponse<String>>(
+    static async generateToken(rtk: string | undefined) {
+        const response = await fetchWithErrorHandling<ApiResponse<string>>(
             `${this.baseURL}/generateToken`,
             "GET",
-            { headers: { Authorization: `Bearer ${rtk}` } }
+            { headers: getAuthHeaders(rtk) }
         );
 
         return response.data;

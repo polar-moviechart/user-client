@@ -1,8 +1,8 @@
 import Cookies from "js-cookie"
 
 export const useJwtTokens = () => {
-    const atk: string = Cookies.get('polar-atk') || '';
-    const rtk: string = Cookies.get('polar-rtk') || '';
+    const atk: string | undefined = Cookies.get('polar-atk') || undefined;
+    const rtk: string | undefined = Cookies.get('polar-rtk') || undefined;
 
     return { atk, rtk };
 };

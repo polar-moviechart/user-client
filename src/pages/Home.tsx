@@ -1,6 +1,5 @@
 import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
-import Cookies from "js-cookie";
 import { MovieApiServicePublic } from "../apis/movie/MovieApiServicePublic";
 import { useApiFetch } from "../hooks/FetchApiFunc";
 import { useCallback } from "react";

@@ -16,7 +16,7 @@ export async function fetchWithErrorHandling<T>(
     } catch (error: any) {
         return {
             isSuccess: false,
-            code: error?.response?.status.toString() || "UNKNOWN_ERROR",
+            code: error?.response?.data?.code || error?.response?.status.toString(),
             data: {} as T,
             errorMsg: error?.response?.data?.errorMsg || error.message || "Unknown error occurred",
         }

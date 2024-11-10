@@ -1,5 +1,4 @@
 import { fetchWithErrorHandling } from "../ApiServiceBase"
-import { ApiResponse } from "../ApiResponse";
 import { LoginResponse } from "./interfaces/LoginResponse";
 
 export class UserApiServicePublic {
@@ -14,12 +13,16 @@ export class UserApiServicePublic {
     }
 
     static async loginKakao(kakaoId: number) {
-        const response = await fetchWithErrorHandling<ApiResponse<LoginResponse>>(
+        const response = await fetchWithErrorHandling<LoginResponse>(
             `${this.baseURL}/login/kakao`,
             "POST",
-            { data: kakaoId }
+            {
+                data: {
+                    id: kakaoId
+                }
+            }
         );
 
-        return response.data;
+        return response;
     }
 };
