@@ -9,7 +9,6 @@ const KakaoAuth = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParam = new URLSearchParams(location.search);
-    const { atk, rtk } = useJwtTokens();
 
     const kakaoUserId = Number(searchParam.get('id') ?? '0');
     if (kakaoUserId === 0) {
@@ -26,7 +25,7 @@ const KakaoAuth = () => {
 
     useEffect(() => {
         if (loginResponse && !isLoggedIn) {
-            setAuthHeaders(atk, rtk);
+            setAuthHeaders(loginResponse.accessToken, loginResponse.refreshToken);
             setIsLoggedIn(true)
             navigate('/');
         }
