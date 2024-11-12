@@ -46,7 +46,7 @@ interface StarRatingProps {
 const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
   const { atk } = useJwtTokens();
   const [rating, setRating] = useState<number>(initialRating);
-  const [tempRating, setTempRating] = useState<number>(initialRating);
+  const [tempRating, setTempRating] = useState<number>(0);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
     navigate('/login');
   };
 
-  const handleSubmitRating = async () => {
+  const handleSubmitRating = async (rating: number) => {
     const response = await MovieApiServiceSecure.submitMovieRating(code, rating, atk);
     if (response.isSuccess) {
       alert('평가가 완료되었습니다.');
@@ -67,7 +67,8 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
     setShowRatingModal(false);
   };
 
-  const handleClickRating = () => {
+  const handleClickRating = (rating: number) => {
+    setTempRating(rating)
     if (!atk) {
       setShowLoginModal(true);
     } else {
@@ -104,8 +105,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
             <StarInput
               key={value}  // value를 key로 사용
               onClickRating={() => {
-                handleClickRating()
-                setTempRating(value)
+                handleClickRating(value)
               }}
               value={value}
               isHalf={isHalf}
@@ -129,7 +129,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
         <CustomModal
           title="별점 제출 확인"
           message={`"${tempRating}" 별점을 평가하시겠습니까?`}
-          onConfirm={handleSubmitRating}
+          onConfirm={() => handleSubmitRating(tempRating)}
           onCancel={handleCancelModal}
           isOpen={showRatingModal} />
       )}
