@@ -12,20 +12,20 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
     const [error, setError] = useState<string | null>(null);
     const { atk, rtk } = useJwtTokens();
 
-    const retryCnt = useRef(0);
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             const response = await apiFunc();
             if (response.isSuccess) {
                 setData(response.data);
-            } else if (response.code === 'T101' && retryCnt.current < 2) {
-                retryCnt.current += 1;
+            } else if (response.code === 'T101') {
+                console.log("atk expired");
                 const response = await refreshTokenAndRetry(rtk, apiFunc);
-                setData(response.data);
-                setErrorCode(response.code);
-                setError(response.errorMsg);
+                if (response.code === 'T101') {
+                    console.log("rtk expired");
+                    alert(response.errorMsg);
+                    window.location.href = '/login';
+                }
             } else {
                 setErrorCode(response.code);
                 setError(response.errorMsg);
@@ -35,6 +35,6 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
 
         fetchData();
     }, [apiFunc, rtk]);
-    
-    return { data, loading, error, errorCode};
+
+    return { data, loading, error, errorCode };
 };

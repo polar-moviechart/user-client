@@ -2,10 +2,8 @@ import Cookies from "js-cookie";
 
 export function getAuthHeaders(token: string | null | undefined): Record<string, string> {
     if (token !== undefined) {
-        console.log("token = ", token);
         return { Authorization: `Bearer ${token}` };
     }
-    console.log("token = ", token);
     return {};
 };
 
@@ -15,6 +13,19 @@ export function setAuthHeaders(
     if (atk) {
         Cookies.set('polar-atk', atk, { expires: 7 });
     }
+
+    if (rtk) {
+        Cookies.set('polar-rtk', rtk, { expires: 7 });
+    }
+};
+
+export function setAtk(atk: string) {
+    if (atk) {
+        Cookies.set('polar-atk', atk, { expires: 7 });
+    }
+};
+
+export function setRtk(rtk: string) {
 
     if (rtk) {
         Cookies.set('polar-rtk', rtk, { expires: 7 });

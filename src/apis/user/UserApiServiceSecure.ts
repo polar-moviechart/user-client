@@ -16,7 +16,7 @@ export class UserApiServiceSecure {
     static async generateToken(rtk: string | undefined) {
         const response = await fetchWithErrorHandling<ApiResponse<string>>(
             `${this.baseURL}/generateToken`,
-            "GET",
+            "POST",
             { headers: getAuthHeaders(rtk) }
         );
 

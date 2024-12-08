@@ -25,7 +25,6 @@ export class MovieApiServicePublic {
                 headers: getAuthHeaders(atk)
             }
         );
-        console.log("headers = ", getAuthHeaders(atk));
         return response;
     }
 
