@@ -4,6 +4,8 @@ import { movieLeadactorDto } from "./MovieLeadactorDto";
 export interface MovieInfoDto {
     code: number;
     ranking: number;
+    rating: number;
+    userMovieRating: number;
     title: string;
     poster: string[];
     details: string;

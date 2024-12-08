@@ -98,7 +98,7 @@ export default function Movie() {
 
             <div className="bg-sky-200 flex flex-col items-center mt-4 mb-4">
               <p className="text-black">평점을 입력해주세요.</p>
-              <StarRating code={Number(code)} initialRating={0} />
+              <StarRating code={Number(code)} initialRating={movieInfo?.userMovieRating ?? 0} />
             </div>
           </div>
         </div>

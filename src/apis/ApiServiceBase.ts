@@ -7,10 +7,12 @@ export async function fetchWithErrorHandling<T>(
     options?: AxiosRequestConfig
 ): Promise<ApiResponse<T>> {
     try {
+        const { data, ...restOptions } = options || {};
         const response = await axios.request<ApiResponse<T>>({
             url,
             method,
-            ...options,
+            data,
+            ...restOptions,
         });
         return response.data;
     } catch (error: any) {

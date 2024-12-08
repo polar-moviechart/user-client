@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
 import { MovieApiServicePublic } from "../apis/movie/MovieApiServicePublic";
 import { useApiFetch } from "../hooks/FetchApiFunc";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useJwtTokens } from "../hooks/useJwtTokens";
 
 export default function Home() {
@@ -15,8 +15,14 @@ export default function Home() {
 
   const { data: movieInfos, loading, error } = useApiFetch(fetchMovies);
 
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  }, [error]);
+
   if (loading) return <div>로딩 중 입니다.</div>;
-  if (error) return <div>{error}</div>
+  if (error) return <div></div>;
 
   return (
     <Layout>

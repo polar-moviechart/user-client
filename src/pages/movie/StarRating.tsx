@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import { MovieApiServiceSecure } from "../../apis/movie/MovieApiServiceSecure";
 import { useJwtTokens } from "../../hooks/useJwtTokens";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CustomModal from "../../components/CustomModal";
 import StarInput from "./StarInput";
+import UserMovieApiServiceSecure from "../../apis/user/UserMovieApiServiceSecure";
 
 const Base = styled.section`
   display: flex;
@@ -44,6 +44,7 @@ interface StarRatingProps {
 }
 
 const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
+  console.log('initialRating:', initialRating);
   const { atk } = useJwtTokens();
   const [rating, setRating] = useState<number>(initialRating);
   const [tempRating, setTempRating] = useState<number>(0);
@@ -57,10 +58,10 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
   };
 
   const handleSubmitRating = async (rating: number) => {
-    const response = await MovieApiServiceSecure.submitMovieRating(code, rating, atk);
+    const response = await UserMovieApiServiceSecure.rateMovie(code, rating, atk);
     if (response.isSuccess) {
       alert('평가가 완료되었습니다.');
-      setRating(response.data)
+      setRating(response.data);
     } else {
       alert(response.errorMsg);
     }

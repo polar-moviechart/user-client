@@ -8,7 +8,7 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const { poster,  movieDirectorDtos: movieDirectorDtos, movieLeadactorDtos: movieLeadactorDtos } = movie;
-  const rating = 10;
+  const rating = movie.rating;
 
   const defaultPoster = "/empty_image.jpg";
 
