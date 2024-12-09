@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { useApiFetch } from "../../hooks/FetchApiFunc";
 import { UserApiServicePublic } from "../../apis/user/UserApiServicePublic";
-import { useJwtTokens } from "../../hooks/useJwtTokens";
 import { setAuthHeaders } from "../../utils/authUtils";
 
 const KakaoAuth = () => {

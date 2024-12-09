@@ -2,7 +2,7 @@ import { fetchWithErrorHandling } from "../ApiServiceBase";
 import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 import { StatType } from "./type/StatType";
 import { MovieStatDto } from "./interfaces/MovieStatDto";
-import { getAuthHeaders } from "../../utils/authUtils";
+import { getAtk } from "../../utils/authUtils";
 
 export class MovieApiServicePublic {
     private static instatnce: MovieApiServicePublic | null = null;
@@ -16,24 +16,34 @@ export class MovieApiServicePublic {
     }
 
 
-    static async getMovies(targetDate: string, atk: string | undefined) {
+    static async getMovies(targetDate: string) {
+        const atk = getAtk();
+        const headers = {
+            Authorization: `Bearer ${atk}`,
+        };
+
         const response = await fetchWithErrorHandling<MovieInfoDto[]>(
             `${this.baseURL}`,
             "GET",
             {
                 params: { targetDate, page: 0, size: 10 },
-                headers: getAuthHeaders(atk)
+                headers: headers
             }
         );
         return response;
     }
 
-    static async getMovie(code: string, atk: string | undefined) {
+    static async getMovie(code: string) {
+        const atk = getAtk();
+        const headers = {
+            Authorization: `Bearer ${atk}`, // 기존 헤더와 병합될 예정
+        };
+        
         const response = await fetchWithErrorHandling<MovieInfoDto>(
             `${this.baseURL}/${code}`,
             "GET",
             {
-                headers: getAuthHeaders(atk)
+                headers: headers
             }
         );
         
