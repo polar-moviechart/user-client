@@ -44,7 +44,6 @@ interface StarRatingProps {
 }
 
 const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
-  console.log('initialRating:', initialRating);
   const { atk } = useJwtTokens();
   const [rating, setRating] = useState<number>(initialRating);
   const [tempRating, setTempRating] = useState<number>(0);
@@ -58,7 +57,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
   };
 
   const handleSubmitRating = async (rating: number) => {
-    const response = await UserMovieApiServiceSecure.rateMovie(code, rating, atk);
+    const response = await UserMovieApiServiceSecure.rateMovie(code, rating);
     if (response.isSuccess) {
       alert('평가가 완료되었습니다.');
       setRating(response.data);

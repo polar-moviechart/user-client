@@ -10,7 +10,7 @@ export default function Home() {
   const targetDate: string = '2004-01-01';
 
   const fetchMovies = useCallback(() => {
-    return MovieApiServicePublic.getMovies(targetDate, atk);
+    return MovieApiServicePublic.getMovies(targetDate);
   }, [targetDate, atk]);
 
   const { data: movieInfos, loading, error } = useApiFetch(fetchMovies);
