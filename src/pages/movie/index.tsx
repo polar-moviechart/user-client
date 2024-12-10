@@ -14,12 +14,10 @@ import { useApiFetch } from "../../hooks/FetchApiFunc";
 import { MovieApiServicePublic } from "../../apis/movie/MovieApiServicePublic";
 import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
-import { useJwtTokens } from "../../hooks/useJwtTokens";
 
 Chart.register(...registerables);
 
 export default function Movie() {
-  const { atk, rtk } = useJwtTokens();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const code: string = searchParams.get('code') || '';
@@ -31,7 +29,7 @@ export default function Movie() {
 
   const statType: StatType = 'RANKING';
 
-  const fetchMovie = useCallback(() => MovieApiServicePublic.getMovie(code, atk), [code]);
+  const fetchMovie = useCallback(() => MovieApiServicePublic.getMovie(code), [code]);
   const fetchStats = useCallback(() => MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
 
   const { data: movieData, loading: movieLoading, error: movieError } = useApiFetch(fetchMovie);
@@ -105,7 +103,7 @@ export default function Movie() {
 
         <div className="flex justify-center">
           <div className="w-full max-w-[450px]">
-            <Reviews />
+            <Reviews code={Number(code)} />
           </div>
         </div>
       </div>

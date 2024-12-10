@@ -2,12 +2,11 @@ import { useState } from "react";
 
 const ReviewForm = ({ addReview }) => {
     const [content, setContent] = useState('');
-    const [userId, setUserId] = useState(0);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (content.trim()) {
-            addReview({ content, userId, date: new Date() });
+            addReview(content);
             setContent(''); // 제출 후 textarea 비우기
         }
     }
