@@ -4,8 +4,8 @@ import Home from './pages/Home';
 import Movie from './pages/movie';
 import KakaoAuth from './pages/login/KakaoAuth';
 import KakaoLogin from './pages/login/KakaoLogin';
-import MyReviews from './pages/myReviews/MyReviews';
 import Modal from 'react-modal';
+import MyReviews from './pages/my/movie/reviews/MyReviews';
 
 Modal.setAppElement('#root');
 
@@ -17,7 +17,7 @@ function App() {
         <Route path="movie" element={<Movie />} />
         <Route path="login" element={<KakaoLogin />} />
         <Route path="/kakaoAuth" Component={KakaoAuth} />
-        <Route path='myReviews' element={<MyReviews />} />
+        <Route path='my/movie/reviews' element={<MyReviews />} />
       </Routes>
     </BrowserRouter>
   );
