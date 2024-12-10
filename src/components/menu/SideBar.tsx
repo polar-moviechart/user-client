@@ -34,7 +34,7 @@ const SideBar = ({ width = 280 }) => {
                         <Link to="/my/movie/reviews">내 영화 리뷰</Link>
                     </li>
                     <li>
-                        <Link to="my/moive/likes">내 영화 좋아요</Link>
+                        <Link to="my/movie/likes">내 영화 좋아요</Link>
                     </li>
                     <li>
                         <Link to="my/movie/ratings">내 영화 평점</Link>
