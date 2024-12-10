@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useApiFetch } from "../../hooks/FetchApiFunc";
 import { UserApiServicePublic } from "../../apis/user/UserApiServicePublic";
 import { setAuthHeaders } from "../../utils/authUtils";
+import { LoginResponse } from "../../apis/user/interfaces/LoginResponse";
+import { ApiResponse } from "../../apis/ApiResponse";
 
 const KakaoAuth = () => {
     const location = useLocation();
@@ -16,22 +18,19 @@ const KakaoAuth = () => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     
-    const fetchKakaoLogin = useCallback(() => {
+    const fetchKakaoLogin = useCallback((): Promise<ApiResponse<LoginResponse>> => {
         return UserApiServicePublic.loginKakao(kakaoUserId);
     }, [kakaoUserId]);
 
-    const { data: loginResponse, loading, error, errorCode } = useApiFetch(fetchKakaoLogin);
+    const loginResponse: LoginResponse | null = useApiFetch(fetchKakaoLogin);
 
     useEffect(() => {
-        if (loginResponse && !isLoggedIn) {
+        if (loginResponse !== null && !isLoggedIn) {
             setAuthHeaders(loginResponse.accessToken, loginResponse.refreshToken);
             setIsLoggedIn(true)
             navigate('/');
         }
     }, [loginResponse, setIsLoggedIn, navigate])
-
-    if (loading) return <div>로딩 중 입니다.</div>;
-    if (error) return <div>{error}</div>;
 
     return (
         <div>

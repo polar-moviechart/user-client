@@ -1,3 +1,4 @@
+import { ApiResponse } from "../ApiResponse";
 import { fetchWithErrorHandling } from "../ApiServiceBase"
 import { LoginResponse } from "./interfaces/LoginResponse";
 
@@ -12,7 +13,7 @@ export class UserApiServicePublic {
         return UserApiServicePublic.instance;
     }
 
-    static async loginKakao(kakaoId: number) {
+    static async loginKakao(kakaoId: number): Promise<ApiResponse<LoginResponse>> {
         const response = await fetchWithErrorHandling<LoginResponse>(
             `${this.baseURL}/login/kakao`,
             "POST",

@@ -3,13 +3,14 @@ import Layout from "../../../../components/Layout";
 import UserMovieApiServiceSecure from "../../../../apis/user/UserMovieApiServiceSecure";
 import { useApiFetch } from "../../../../hooks/FetchApiFunc";
 import Review from "../../../../apis/user/interfaces/Review";
+import { ApiResponse } from "../../../../apis/ApiResponse";
 
 const MyReviews = () => {
-    const fetchMyReviews = useCallback(() => {
+    const fetchMyReviews = useCallback((): Promise<ApiResponse<Review[]>> => {
         return UserMovieApiServiceSecure.getMyReviews();
     }, []);
 
-    const { data: reviews } = useApiFetch<Review[]>(fetchMyReviews);
+    const reviews: Review[] = useApiFetch<Review[]>(fetchMyReviews) || [];
 
     const handleTitleClick = (code: number) => {
         window.location.href = `/movie?code=${code}`;

@@ -14,6 +14,8 @@ import { useApiFetch } from "../../hooks/FetchApiFunc";
 import { MovieApiServicePublic } from "../../apis/movie/MovieApiServicePublic";
 import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
+import { ApiResponse } from "../../apis/ApiResponse";
+import { MovieStatDto } from "../../apis/movie/interfaces/MovieStatDto";
 
 Chart.register(...registerables);
 
@@ -29,23 +31,25 @@ export default function Movie() {
 
   const statType: StatType = 'RANKING';
 
-  const fetchMovie = useCallback(() => MovieApiServicePublic.getMovie(code), [code]);
-  const fetchStats = useCallback(() => MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
+  const fetchMovie = useCallback((): Promise<ApiResponse<MovieInfoDto>> =>
+    MovieApiServicePublic.getMovie(code), [code]);
+  const fetchStats = useCallback((): Promise<ApiResponse<MovieStatDto>> =>
+    MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
 
-  const { data: movieData, loading: movieLoading, error: movieError } = useApiFetch(fetchMovie);
-  const { data: statData, loading: statLoading, error: statError } = useApiFetch(fetchStats);
-
-  useEffect(() => {
-    if (movieData) {
-      setMovieInfo(movieData);
-    }
-  }, [movieData]);
+  const fetchedMovieInfo: MovieInfoDto | null = useApiFetch(fetchMovie);
+  const fetchMovieStats: MovieStatDto | null = useApiFetch(fetchStats);
 
   useEffect(() => {
-    if (statData) {
-      setMovieStats(statData.statDtos)
+    if (fetchedMovieInfo) {
+      setMovieInfo(fetchedMovieInfo);
     }
-  }, [statData]);
+  }, [movieInfo]);
+
+  useEffect(() => {
+    if (fetchMovieStats) {
+      setMovieStats(fetchMovieStats.statDtos)
+    }
+  }, [movieStats]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
@@ -64,22 +68,10 @@ export default function Movie() {
     ],
   };
 
-  if (movieError) return <p>{movieError}</p>
-  if (statError) return <p>{statError}</p>
-  if (movieLoading || statLoading) return <p>로딩 중입니다.</p>;
-
   return (
     <Layout>
       <div className="min-h-screen bg-gray-100">
-        {/* 탭 섹션 */}
-        <div className="flex justify-center space-x-4 py-4">
-          <button className="px-4 py-2 bg-red-600 text-white font-semibold rounded-md">
-            최근 영화 별점
-          </button>
-          <button className="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md">
-            전문가별 별점
-          </button>
-        </div>
+
 
         <div className="bg-lime-50 flex justify-center">
           {/* 영화 카드 섹션 */}

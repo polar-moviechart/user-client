@@ -3,6 +3,7 @@ import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 import { StatType } from "./type/StatType";
 import { MovieStatDto } from "./interfaces/MovieStatDto";
 import { getAtk } from "../../utils/authUtils";
+import { ApiResponse } from "../ApiResponse";
 
 export class MovieApiServicePublic {
     private static instatnce: MovieApiServicePublic | null = null;
@@ -16,7 +17,7 @@ export class MovieApiServicePublic {
     }
 
 
-    static async getMovies(targetDate: string) {
+    static async getMovies(targetDate: string): Promise<ApiResponse<MovieInfoDto[]>> {
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`,
@@ -33,7 +34,7 @@ export class MovieApiServicePublic {
         return response;
     }
 
-    static async getMovie(code: string) {
+    static async getMovie(code: string): Promise<ApiResponse<MovieInfoDto>> {
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`, // 기존 헤더와 병합될 예정
@@ -51,7 +52,7 @@ export class MovieApiServicePublic {
         return response;
     }
 
-    static async getMovieStats(code: string, statType: StatType, limit: number) {
+    static async getMovieStats(code: string, statType: StatType, limit: number): Promise<ApiResponse<MovieStatDto>> {
         const response = await fetchWithErrorHandling<MovieStatDto>(
             `${this.baseURL}/${code}/stats`,
             "GET",

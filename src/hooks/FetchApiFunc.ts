@@ -41,5 +41,5 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
         fetchData();
     }, [apiFunc, rtk]);
 
-    return { data, loading, error, errorCode };
+    return data;
 };
