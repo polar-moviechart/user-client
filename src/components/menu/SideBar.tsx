@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import './Menu.css';
 import { Link } from "react-router-dom";
 
@@ -31,10 +31,13 @@ const SideBar = ({ width = 280 }) => {
                         <Link to="/login">로그인</Link>
                     </li>
                     <li>
-                        <Link to="/myReviews">내 리뷰</Link>
+                        <Link to="/my/movie/reviews">내 영화 리뷰</Link>
                     </li>
                     <li>
-                        <Link to="myMovies">내 영화</Link>
+                        <Link to="my/moive/likes">내 영화 좋아요</Link>
+                    </li>
+                    <li>
+                        <Link to="my/movie/ratings">내 영화 평점</Link>
                     </li>
                 </ul>
             </div>

@@ -1,4 +1,5 @@
 import { getAtk } from "../../utils/authUtils";
+import { ApiResponse } from "../ApiResponse";
 import { fetchWithErrorHandling } from "../ApiServiceBase";
 import Review from "./interfaces/Review";
 
@@ -33,9 +34,6 @@ export default class UserMovieApiServiceSecure {
     }
 
     static async addReview(code: number, review: string): Promise<Review> {
-        // const data = {
-        //     'content': review,
-        // };
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`,
@@ -52,5 +50,22 @@ export default class UserMovieApiServiceSecure {
             }
         );
         return reseponse.data;
+    }
+
+    static async getMyReviews(): Promise<ApiResponse<Review[]>> {
+        const atk = getAtk();
+        const headers = {
+            Authorization: `Bearer ${atk}`,
+        };
+
+        const response = await fetchWithErrorHandling<Review[]>(
+            `${this.baseURL}/reviews`,
+            "GET",
+            {
+                headers: headers,
+                params: { page: 0, size: 10 }
+            }
+        );
+        return response;
     }
 }
