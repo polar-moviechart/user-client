@@ -71,7 +71,6 @@ export default class UserMovieApiServiceSecure {
         const headers = {
             Authorization: `Bearer ${atk}`,
         };
-        console.log('updateLike', likeStatus);
         return axios.post(`${this.baseURL}/${code}/likes`,
             { isLike: likeStatus },
             { headers: headers }

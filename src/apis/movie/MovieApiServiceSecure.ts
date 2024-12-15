@@ -1,5 +1,7 @@
 import axios from "axios";
-import { getAuthHeaders } from "../../utils/authUtils";
+import { getAtk, getAuthHeaders } from "../../utils/authUtils";
+import { ApiResponse } from "../ApiResponse";
+import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 
 export class MovieApiServiceSecure {
     private static instatnce: MovieApiServiceSecure | null = null;
@@ -19,7 +21,7 @@ export class MovieApiServiceSecure {
                 rating: rating
             }
         })
-        .then((response) => {return response.data});
+            .then((response) => { return response.data });
     }
 
     static async getMovieRating(code: number, atk: string) {
@@ -28,6 +30,17 @@ export class MovieApiServiceSecure {
             headers: getAuthHeaders(atk)
 
         })
-        .then((response) => {return response.data});
+            .then((response) => { return response.data });
+    }
+
+    static getLikedMovie(): Promise<ApiResponse<MovieInfoDto[]>> {
+        const atk = getAtk();
+        const headers = {
+            Authorization: `Bearer ${atk}`,
+        };
+        return axios.get(`${this.baseURL}/likes`, {
+            headers: headers,
+            params: { page: 0, size: 10 }
+        }).then((response) => { return response.data });
     }
 };
