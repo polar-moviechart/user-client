@@ -13,8 +13,9 @@ const Reviews: React.FC<ReviewsProps> = ({ code }) => {
     const [reviews, setReview] = useState<Review[]>([]);
 
     const addReview = async (newReview: string): Promise<void> => {
-        const addedReview = await UserMovieApiServiceSecure.addReview(code, newReview);
-        setReview((prevReviews) => [addedReview, ...prevReviews]);
+        const response = await UserMovieApiServiceSecure.addReview(code, newReview);
+        console.log(response);
+        setReview((prevReviews) => [response.data, ...prevReviews]);
     };
 
 
@@ -22,7 +23,7 @@ const Reviews: React.FC<ReviewsProps> = ({ code }) => {
         const fetchReviews = async () => {
             // 초기 데이터
             const response = await UserMovieApiServicePublic.getReviews(code)
-            setReview(response);
+            setReview(response.data);
         };
 
         fetchReviews();

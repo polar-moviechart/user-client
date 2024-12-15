@@ -2,20 +2,18 @@ import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
 import { MovieApiServicePublic } from "../apis/movie/MovieApiServicePublic";
 import { useApiFetch } from "../hooks/FetchApiFunc";
-import { useCallback, useEffect } from "react";
-import { useJwtTokens } from "../hooks/useJwtTokens";
+import { useCallback } from "react";
 import { ApiResponse } from "../apis/ApiResponse";
 import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 
 export default function Home() {
-  const { atk: atk, rtk: rtk } = useJwtTokens();
   const targetDate: string = '2004-01-01';
 
-  const fetchMovies: () => Promise<ApiResponse<MovieInfoDto[]>> = useCallback(() => {
+  const fetchMovies = useCallback(() => {
     return MovieApiServicePublic.getMovies(targetDate);
-  }, [targetDate, atk]);
+  }, [targetDate]);
 
-  const data: MovieInfoDto[] = useApiFetch(fetchMovies) || [];
+  const data = useApiFetch(fetchMovies) || [];
 
   return (
     <Layout>

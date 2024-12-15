@@ -1,5 +1,5 @@
+import axios from "axios";
 import { ApiResponse } from "../ApiResponse";
-import { fetchWithErrorHandling } from "../ApiServiceBase"
 import { LoginResponse } from "./interfaces/LoginResponse";
 
 export class UserApiServicePublic {
@@ -14,16 +14,9 @@ export class UserApiServicePublic {
     }
 
     static async loginKakao(kakaoId: number): Promise<ApiResponse<LoginResponse>> {
-        const response = await fetchWithErrorHandling<LoginResponse>(
-            `${this.baseURL}/login/kakao`,
-            "POST",
-            {
-                data: {
-                    id: kakaoId
-                }
-            }
-        );
-
-        return response;
+        console.log('kakaoId = ', kakaoId);
+        return await axios.post(`${this.baseURL}/login/kakao`,
+            { id: kakaoId })
+            .then((response) => { return response.data });;
     }
 };

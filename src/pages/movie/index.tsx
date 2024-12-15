@@ -27,8 +27,6 @@ export default function Movie() {
   const [movieInfo, setMovieInfo] = useState<MovieInfoDto | null>(null);
   const [movieStats, setMovieStats] = useState<MovieStats[]>([]);
 
-  const [ratingValue, setRatingValue] = useState(0); // 별점 값을 저장하는 state 추가
-
   const statType: StatType = 'RANKING';
 
   const fetchMovie = useCallback((): Promise<ApiResponse<MovieInfoDto>> =>
@@ -36,20 +34,21 @@ export default function Movie() {
   const fetchStats = useCallback((): Promise<ApiResponse<MovieStatDto>> =>
     MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
 
-  const fetchedMovieInfo: MovieInfoDto | null = useApiFetch(fetchMovie);
-  const fetchMovieStats: MovieStatDto | null = useApiFetch(fetchStats);
+  const fetchedMovieInfo = useApiFetch<MovieInfoDto>(fetchMovie);
+  const fetchMovieStats = useApiFetch<MovieStatDto>(fetchStats);
 
   useEffect(() => {
     if (fetchedMovieInfo) {
       setMovieInfo(fetchedMovieInfo);
+      console.log('movieInfo', movieInfo);
     }
-  }, [movieInfo]);
+  }, [movieInfo, fetchedMovieInfo]);
 
   useEffect(() => {
     if (fetchMovieStats) {
       setMovieStats(fetchMovieStats.statDtos)
     }
-  }, [movieStats]);
+  }, [movieStats, fetchMovieStats]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
@@ -88,7 +87,7 @@ export default function Movie() {
 
             <div className="bg-sky-200 flex flex-col items-center mt-4 mb-4">
               <p className="text-black">평점을 입력해주세요.</p>
-              <StarRating code={Number(code)} initialRating={movieInfo?.userMovieRating ?? 0} />
+              <StarRating code={Number(code)} initialRating={movieInfo?.rating ?? 0} />
             </div>
           </div>
         </div>

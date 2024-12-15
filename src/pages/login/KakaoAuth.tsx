@@ -1,10 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
-import { useApiFetch } from "../../hooks/FetchApiFunc";
+import { useEffect, useState } from "react";
 import { UserApiServicePublic } from "../../apis/user/UserApiServicePublic";
 import { setAuthHeaders } from "../../utils/authUtils";
-import { LoginResponse } from "../../apis/user/interfaces/LoginResponse";
-import { ApiResponse } from "../../apis/ApiResponse";
+import { safeApiCall } from "../../apis/SafeApiCall";
 
 const KakaoAuth = () => {
     const location = useLocation();
@@ -12,25 +10,26 @@ const KakaoAuth = () => {
     const searchParam = new URLSearchParams(location.search);
 
     const kakaoUserId = Number(searchParam.get('id') ?? '0');
-    if (kakaoUserId === 0) {
-        throw new Error("카카오 로그인 중 문제가 발생했습니다.");
-    }
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    
-    const fetchKakaoLogin = useCallback((): Promise<ApiResponse<LoginResponse>> => {
-        return UserApiServicePublic.loginKakao(kakaoUserId);
-    }, [kakaoUserId]);
-
-    const loginResponse: LoginResponse | null = useApiFetch(fetchKakaoLogin);
 
     useEffect(() => {
-        if (loginResponse !== null && !isLoggedIn) {
-            setAuthHeaders(loginResponse.accessToken, loginResponse.refreshToken);
-            setIsLoggedIn(true)
-            navigate('/');
+        if (kakaoUserId === 0) {
+            throw new Error("카카오 로그인 중 문제가 발생했습니다.");
         }
-    }, [loginResponse, setIsLoggedIn, navigate])
+
+        const fetchKakaoLogin = async () => {
+            const response = await safeApiCall(() => UserApiServicePublic.loginKakao(kakaoUserId));
+            if (response.isSuccess) {
+                setAuthHeaders(response.data.accessToken, response.data.refreshToken);
+                setIsLoggedIn(true)
+                navigate('/');
+            }
+        };
+
+        fetchKakaoLogin();
+    }, []);
+
 
     return (
         <div>

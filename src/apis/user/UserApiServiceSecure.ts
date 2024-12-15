@@ -1,5 +1,4 @@
-import { fetchWithErrorHandling } from "../ApiServiceBase"
-import { getAuthHeaders } from "../../utils/authUtils";
+import axios from "axios";
 import { ApiResponse } from "../ApiResponse";
 import GenerateTokenRes from "./interfaces/GenerateTokenRes";
 
@@ -15,12 +14,12 @@ export class UserApiServiceSecure {
     }
 
     static async generateToken(rtk: string | undefined): Promise<ApiResponse<GenerateTokenRes>> {
-        const response: ApiResponse<GenerateTokenRes> = await fetchWithErrorHandling<GenerateTokenRes>(
-            `${this.baseURL}/generateToken`,
-            "POST",
-            { headers: getAuthHeaders(rtk) }
-        );
-
-        return response;
+        const headers = {
+            Authorization: `Bearer ${rtk}`,
+        };
+        return axios.post(`${this.baseURL}/generateToken`,
+            {},
+            { headers: headers }
+        ).then((response) => {return response.data});;
     }
 };

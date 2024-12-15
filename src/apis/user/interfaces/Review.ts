@@ -3,7 +3,6 @@ export default interface Review {
     userId: number;
     nickname: string;
     content: string;
-    rating: number;
     code: number;
     title: string;
     date: Date;

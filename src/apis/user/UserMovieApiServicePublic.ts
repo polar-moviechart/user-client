@@ -1,6 +1,7 @@
+import axios from "axios";
 import { getAtk } from "../../utils/authUtils";
-import { fetchWithErrorHandling } from "../ApiServiceBase";
 import Review from "./interfaces/Review";
+import { ApiResponse } from "../ApiResponse";
 
 export default class UserMovieApiServicePublic {
     private static instance: UserMovieApiServicePublic | null = null;
@@ -13,19 +14,14 @@ export default class UserMovieApiServicePublic {
         return UserMovieApiServicePublic.instance;
     }
 
-    static async getReviews(code: number) {
+    static async getReviews(code: number): Promise<ApiResponse<Review[]>> {
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`,
         };
 
-        const response = await fetchWithErrorHandling<Review[]>(
-            `${this.baseURL}/${code}/reviews`,
-            "GET",
-            {
-                headers: headers
-            }
-        );
-        return response.data;
+        return axios.get(`${this.baseURL}/${code}/reviews`, {
+            headers: headers
+        }).then((response) => {return response.data});
     }
 }

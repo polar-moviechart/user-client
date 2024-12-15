@@ -1,10 +1,12 @@
 import styled from "@emotion/styled";
-import { useJwtTokens } from "../../hooks/useJwtTokens";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomModal from "../../components/CustomModal";
 import StarInput from "./StarInput";
 import UserMovieApiServiceSecure from "../../apis/user/UserMovieApiServiceSecure";
+import { useJwtTokens } from "../../utils/authUtils";
+import { ApiResponse } from "../../apis/ApiResponse";
+import { RateResponse } from "../../apis/movie/interfaces/RateResponse";
 
 const Base = styled.section`
   display: flex;
@@ -51,16 +53,20 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setRating(initialRating);
+  }, [initialRating]);
+
   const handleLoginRedirect = () => {
     setShowLoginModal(false);
     navigate('/login');
   };
 
   const handleSubmitRating = async (rating: number) => {
-    const response = await UserMovieApiServiceSecure.rateMovie(code, rating);
+    const response: ApiResponse<RateResponse> = await UserMovieApiServiceSecure.rateMovie(code, rating);
     if (response.isSuccess) {
       alert('평가가 완료되었습니다.');
-      setRating(response.data);
+      setRating(response.data.rating);
     } else {
       alert(response.errorMsg);
     }
@@ -112,7 +118,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
             />
           ))}
         </RatingField>
-        <RatingValue>{initialRating}</RatingValue>
+        <RatingValue>{rating}</RatingValue>
       </Base>
 
       {/* 로그인 모달 */}
