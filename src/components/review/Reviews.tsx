@@ -14,8 +14,8 @@ const Reviews: React.FC<ReviewsProps> = ({ code }) => {
 
     const addReview = async (newReview: string): Promise<void> => {
         const response = await UserMovieApiServiceSecure.addReview(code, newReview);
-        console.log(response);
-        setReview((prevReviews) => [response.data, ...prevReviews]);
+        setReview((prevReviews) =>
+            (Array.isArray(prevReviews) ? [response.data, ...prevReviews] : [response.data]));
     };
 
 

@@ -33,7 +33,8 @@ const MyReviews = () => {
                             >
                                 {review.title}
                             </p>
-                            <p className="mb-3">{review.content}</p>
+                            <p>{review.content}</p>
+                            <p className="mb-3">작성일: {new Date(review.createdAt).toLocaleDateString()}</p>
                         </li>
                     ))}
                 </ul>

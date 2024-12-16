@@ -5,5 +5,5 @@ export default interface Review {
     content: string;
     code: number;
     title: string;
-    date: Date;
+    createdAt: Date;
 }
