@@ -5,6 +5,7 @@ import { UpdateLikeRes } from "../movie/interfaces/UpdateLikeRes";
 import Likes from "./interfaces/Likes";
 import Review from "./interfaces/Review";
 import { RateResponse } from "../movie/interfaces/RateResponse";
+import { Page } from "../movie/interfaces/Page";
 
 export default class UserMovieApiServiceSecure {
     private static instance: UserMovieApiServiceSecure | null = null;
@@ -41,7 +42,7 @@ export default class UserMovieApiServiceSecure {
         ).then((response) => { return response.data });;
     }
 
-    static async getMyReviews(): Promise<ApiResponse<Review[]>> {
+    static async getMyReviews(page: number, size: number): Promise<ApiResponse<Page<Review[]>>> {
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`,
@@ -49,8 +50,7 @@ export default class UserMovieApiServiceSecure {
 
         return axios.get(`${this.baseURL}/reviews`, {
             headers: headers,
-            params: { page: 0, size: 10 }
-
+            params: { page: page, size: size },
         }).then((response) => { return response.data });;
     };
 
