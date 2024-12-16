@@ -4,6 +4,7 @@ import { MovieStatDto } from "./interfaces/MovieStatDto";
 import { getAtk } from "../../utils/authUtils";
 import { ApiResponse } from "../ApiResponse";
 import axios from "axios";
+import { Page } from "./interfaces/Page";
 
 export class MovieApiServicePublic {
     private static instatnce: MovieApiServicePublic | null = null;
@@ -17,7 +18,7 @@ export class MovieApiServicePublic {
     }
 
 
-    static async getMovies(targetDate: string): Promise<ApiResponse<MovieInfoDto[]>> {
+    static async getMovies(targetDate: string, page: number, size: number): Promise<ApiResponse<Page<MovieInfoDto[]>>> {
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`,
@@ -25,7 +26,7 @@ export class MovieApiServicePublic {
 
         return await axios.get(`${this.baseURL}`, {
             headers: headers,
-            params: { targetDate, page: 0, size: 10 },
+            params: { targetDate, page: page, size: size },
         })
         .then((response) => {return response.data});
     }

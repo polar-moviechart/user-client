@@ -3,7 +3,6 @@ import { ApiResponse } from "../apis/ApiResponse";
 import { clearTokens, getRtk, setAtk, useJwtTokens } from "../utils/authUtils";
 import { handleApiError } from "./ApiRequest";
 import { safeApiCall } from "../apis/SafeApiCall";
-import Cookies from "js-cookie";
 import { UserApiServiceSecure } from "../apis/user/UserApiServiceSecure";
 
 type FetchApiFunc<T> = () => Promise<ApiResponse<T>>;
@@ -14,12 +13,12 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
     const { rtk } = useJwtTokens();
 
     useEffect(() => {
-        console.log("useApiFetch ");
         const fetchData = async () => {
             setLoading(true);
 
             const fetchWithRetry = async (): Promise<ApiResponse<T | null>> => {
                 const response: ApiResponse<T | null> = await safeApiCall(apiFunc);
+                // console.log(response)
                 if (response.code === 'T101' && rtk) {
                     console.log('엑세스 토큰 만료')
                     await handleAtkExpired(rtk);
