@@ -8,9 +8,19 @@ interface CustomModalProbs {
     message: string;
     onConfirm: () => void;
     onCancel: () => void;
+    confirmText?: string;
+    cancelText?: string;
 }
 
-const CustomModal: React.FC<CustomModalProbs> = ({ isOpen, title = '', message, onConfirm, onCancel }) => {
+const CustomModal: React.FC<CustomModalProbs> = ({
+    isOpen,
+    title = '',
+    message,
+    onConfirm = () => {},
+    onCancel = () => {},
+    confirmText = '확인',
+    cancelText = '취소'
+}) => {
     return (
         <Modal
             isOpen={isOpen}
@@ -29,8 +39,8 @@ const CustomModal: React.FC<CustomModalProbs> = ({ isOpen, title = '', message, 
                 ))}
             </p>
             <div className="modal-buttons">
-                <button onClick={onConfirm} className="modal-button">확인</button>
-                <button onClick={onCancel} className="modal-close">취소</button>
+                <button onClick={onConfirm} className="modal-button">{confirmText}</button>
+                <button onClick={onCancel} className="modal-close">{cancelText}</button>
             </div>
         </Modal>
     );

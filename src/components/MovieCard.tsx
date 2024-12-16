@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import StarRatingSum from "./StarRatingSum";
 import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 import UserMovieApiServiceSecure from "../apis/user/UserMovieApiServiceSecure";
@@ -6,6 +6,9 @@ import { UpdateLikeRes } from "../apis/movie/interfaces/UpdateLikeRes";
 import { useState } from "react";
 import { safeApiCall } from "../apis/SafeApiCall";
 import { ApiResponse } from "../apis/ApiResponse";
+import CustomModal from "./CustomModal";
+import useModal from "../hooks/UseModal";
+import { getRtk } from "../utils/authUtils";
 
 interface MovieCardProps {
   movie: MovieInfoDto;
@@ -15,8 +18,21 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const { poster, movieDirectorDtos, movieLeadactorDtos } = movie;
   const rating = movie.rating;
   const defaultPoster = "/empty_image.jpg";
-
   const [liked, setLiked] = useState(movie.isLike);
+
+  const { modalState, openModal, closeModal } = useModal();
+
+  const handleLikeClick = () => {
+    const rtk = getRtk();
+    if (!rtk) {
+      openModal(
+        '로그인 필요',
+        '로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?'
+      );
+    } else {
+      toggleLike();
+    }
+  }
 
   const toggleLike = async () => {
     const data: ApiResponse<UpdateLikeRes> = await safeApiCall<UpdateLikeRes>(() =>
@@ -25,6 +41,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
     if (data) {
       setLiked(!liked);
     }
+  };
+
+  const handleLoginRedirect = () => {
+    closeModal();
+    window.location.href = '/login';
   };
 
   return (
@@ -41,12 +62,20 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         <StarRatingSum rating={rating} />
         {/* 좋아요 버튼 */}
         <button
-          onClick={toggleLike}
+          onClick={handleLikeClick}
           className={`ml-auto flex items-center px-3 py-1 rounded-full text-sm font-bold 
             ${liked ? "bg-red-500 text-white" : "bg-gray-200 text-gray-700"} hover:shadow-md`}
         >
           {liked ? "❤️ 좋아요" : "🤍 좋아요"}
         </button>
+        {/* 로그인 모달 */}
+        <CustomModal
+          title={modalState.title}
+          message={modalState.message}
+          onConfirm={handleLoginRedirect}
+          onCancel={closeModal}
+          isOpen={modalState.isOpen}
+        />
       </div>
 
       {/* <div className="bg-orange-500 flex flex-row"> */}
