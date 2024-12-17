@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import CustomModal from "../../components/CustomModal";
 import StarInput from "./StarInput";
 import UserMovieApiServiceSecure from "../../apis/user/UserMovieApiServiceSecure";
-import { useJwtTokens } from "../../utils/authUtils";
+import { getRtk, useJwtTokens } from "../../utils/authUtils";
 import { ApiResponse } from "../../apis/ApiResponse";
 import { RateResponse } from "../../apis/movie/interfaces/RateResponse";
+import useModal from "../../hooks/UseModal";
 
 const Base = styled.section`
   display: flex;
@@ -52,6 +53,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const navigate = useNavigate();
+  const { modalState, openModal, closeModal } = useModal();
 
   useEffect(() => {
     setRating(initialRating);
@@ -124,7 +126,8 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
       {/* 로그인 모달 */}
       {showLoginModal && (
         <CustomModal
-          message={`로그인한 경우에만 평가를 할 수 있습니다. \n 로그인 하시겠습니까?`}
+          title="로그인 필요"
+          message={`로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?`}
           onConfirm={handleLoginRedirect}
           onCancel={handleCancelModal}
           isOpen={showLoginModal} />
