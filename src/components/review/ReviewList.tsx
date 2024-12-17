@@ -1,7 +1,11 @@
+import Review from "../../apis/user/interfaces/Review";
 import formatDate from "../FomatDate";
 
+interface ReviewListProps {
+    reviews: Review[];
+}
 
-const ReviewList = ({ reviews }) => {
+const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
     return (
         <div className="mt-2">
             {reviews && Array.isArray(reviews) && reviews.length > 0 ? (
@@ -10,9 +14,8 @@ const ReviewList = ({ reviews }) => {
                         <div className="text-gray-500 ml-5">
                             <p>{review.nickname}</p>
                             <p>{review.content}</p>
-                            <p>
-                                {review.user} {formatDate(review.date)}
-                            </p>
+                            {/* <p>{formatDate(review.createdAt)}</p> */}
+                            <p>{new Date(review.createdAt).toLocaleDateString()}</p>
                         </div>
                         {/* 리뷰 사이에 줄 추가 */}
                         {index < reviews.length - 1 && (

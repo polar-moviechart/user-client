@@ -28,6 +28,7 @@ const Reviews: React.FC<ReviewsProps> = ({ code }) => {
     }, [page, code]);
 
     const pagedData = useApiFetch<Page<Review[]>>(fetchReviews) || createEmptyPage<Review[]>();
+
     useEffect(() => {
         if (pagedData && pagedData.content.length > 0) {
             setReview((prevReview) => [...prevReview, ...pagedData.content]);

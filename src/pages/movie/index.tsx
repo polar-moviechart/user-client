@@ -40,7 +40,6 @@ export default function Movie() {
   useEffect(() => {
     if (fetchedMovieInfo) {
       setMovieInfo(fetchedMovieInfo);
-      console.log('movieInfo', movieInfo);
     }
   }, [movieInfo, fetchedMovieInfo]);
 
