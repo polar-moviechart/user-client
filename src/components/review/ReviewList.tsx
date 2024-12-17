@@ -15,7 +15,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
                             <p>{review.nickname}</p>
                             <p>{review.content}</p>
                             {/* <p>{formatDate(review.createdAt)}</p> */}
-                            <p>{new Date(review.createdAt).toLocaleDateString()}</p>
+                            <p>{new Date(review.modifiedAt).toLocaleDateString()}</p>
                         </div>
                         {/* 리뷰 사이에 줄 추가 */}
                         {index < reviews.length - 1 && (

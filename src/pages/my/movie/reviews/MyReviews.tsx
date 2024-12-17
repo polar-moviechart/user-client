@@ -4,7 +4,6 @@ import UserMovieApiServiceSecure from "../../../../apis/user/UserMovieApiService
 import { useApiFetch } from "../../../../hooks/FetchApiFunc";
 import Review from "../../../../apis/user/interfaces/Review";
 import { createEmptyPage, Page } from "../../../../apis/movie/interfaces/Page";
-import { ApiResponse } from "../../../../apis/ApiResponse";
 
 const MyReviews = () => {
     const [reviews, setReviews] = useState<Review[]>([]);
@@ -62,7 +61,7 @@ const MyReviews = () => {
                                 {review.title}
                             </p>
                             <p>{review.content}</p>
-                            <p className="mb-3">작성일: {new Date(review.createdAt).toLocaleDateString()}</p>
+                            <p className="mb-3">작성일: {new Date(review.modifiedAt).toLocaleDateString()}</p>
                             {/* 리뷰 사이에 줄 추가 */}
                             {index < reviews.length - 1 && (
                                 <hr className="my-2 border-gray-300" />
