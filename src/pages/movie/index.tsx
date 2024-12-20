@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";  // 쿼리 파라미터를 가�
 import Layout from "../../components/Layout";
 import StarRating from "./StarRating";
 import MovieCard from "../../components/MovieCard";
-import Reviews from "../../components/review/Reviews";
 import transformStats from "./transformStats";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
@@ -16,6 +15,7 @@ import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
 import { ApiResponse } from "../../apis/ApiResponse";
 import { MovieStatDto } from "../../apis/movie/interfaces/MovieStatDto";
+import Reviews from "../../components/review/Reviews";
 
 Chart.register(...registerables);
 
@@ -91,11 +91,14 @@ export default function Movie() {
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <div className="w-full max-w-[450px]">
-            <Reviews code={Number(code)} />
+        {/* Reviews는 데이터 준비 완료 후 랜더링 */}
+        {movieInfo && movieStats.length > 0 && (
+          <div className="flex justify-center">
+            <div className="w-full max-w-[450px]">
+              <Reviews code={Number(code)} />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Layout>
   );
