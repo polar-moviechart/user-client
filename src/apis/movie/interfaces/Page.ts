@@ -1,4 +1,3 @@
-import { ApiResponse } from "../../ApiResponse";
 
 export interface Page<T> {
     content: T;
@@ -16,6 +15,6 @@ export function createEmptyPage<T>(): Page<T> {
         size: 0,
         totalElements: 0,
         totalPages: 0,
-        last: true,
+        last: false,
     };
 }
