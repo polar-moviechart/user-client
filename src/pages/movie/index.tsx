@@ -26,6 +26,11 @@ export default function Movie() {
 
   const [movieInfo, setMovieInfo] = useState<MovieInfoDto | null>(null);
   const [movieStats, setMovieStats] = useState<MovieStats[]>([]);
+  const [chartData, setChartData] = useState<{ labels: Date[], datasets: Dataset[] }>
+  ({
+    labels: [],
+    datasets: [],
+  });
 
   const statType: StatType = 'RANKING';
 
@@ -34,8 +39,8 @@ export default function Movie() {
   const fetchStats = useCallback((): Promise<ApiResponse<MovieStatDto>> =>
     MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
 
-  const fetchedMovieInfo = useApiFetch<MovieInfoDto>(fetchMovie);
-  const fetchMovieStats = useApiFetch<MovieStatDto>(fetchStats);
+  const { data: fetchedMovieInfo, isLoading: movieInfoLoaded } = useApiFetch<MovieInfoDto>(fetchMovie);
+  const { data: fetchMovieStats, isLoading: movieStatsLoaded } = useApiFetch<MovieStatDto>(fetchStats);
 
   useEffect(() => {
     if (fetchedMovieInfo) {
@@ -44,27 +49,29 @@ export default function Movie() {
   }, [movieInfo, fetchedMovieInfo]);
 
   useEffect(() => {
-    if (fetchMovieStats) {
+    if (fetchMovieStats.statDtos) {
       setMovieStats(fetchMovieStats.statDtos)
     }
+
+    const dataPoints: DataPoint[] = transformStats(movieStats);
+    const dataset: { labels: Date[], datasets: Dataset[] } = {
+      labels: dataPoints.map(point => point.x),
+      datasets: [
+        {
+          type: 'line',
+          label: '랭킹',
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderWidth: 2,
+          data: dataPoints.map(point => point.y),
+        },
+      ],
+    };
+    setChartData(dataset);
   }, [movieStats, fetchMovieStats]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
-  const dataPoints: DataPoint[] = transformStats(movieStats);
-  const dataset: { labels: Date[], datasets: Dataset[] } = {
-    labels: dataPoints.map(point => point.x),
-    datasets: [
-      {
-        type: 'line',
-        label: '랭킹',
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderWidth: 2,
-        data: dataPoints.map(point => point.y),
-      },
-    ],
-  };
 
   return (
     <Layout>
@@ -78,10 +85,7 @@ export default function Movie() {
 
             {/* 라인차트 표시 */}
             <div className="w-full width=" style={{ width: cardWidth, height: chartHeight }}>
-              {/* {stats.length > 0 && (
-                <LineChart data={chartData} width={cardWidth} height={chartHeight} />
-              )} */}
-              <Line data={dataset} />
+              <Line data={chartData} />
             </div>
 
             <div className="bg-sky-200 flex flex-col items-center mt-4 mb-4">

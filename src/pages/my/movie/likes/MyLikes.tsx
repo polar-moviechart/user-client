@@ -11,7 +11,7 @@ const MyLikes = () => {
 
     const fetchMyLikeMovies = useCallback((): Promise<ApiResponse<MovieInfoDto[]>> =>
         MovieApiServiceSecure.getLikedMovie(), []);
-    const fetchLikedMovies: MovieInfoDto[] = useApiFetch<MovieInfoDto[]>(fetchMyLikeMovies) || [];
+    const { data: fetchLikedMovies, isLoading: likedMoviesLoaded} = useApiFetch<MovieInfoDto[]>(fetchMyLikeMovies) || [];
     useEffect(() => {
         if (fetchLikedMovies) {
             setLikedMovies(fetchLikedMovies)

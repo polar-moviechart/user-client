@@ -9,7 +9,7 @@ type FetchApiFunc<T> = () => Promise<ApiResponse<T>>;
 
 export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
     const [data, setData] = useState<T | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [isLoading, setLoading] = useState<boolean>(true);
     const { rtk } = useJwtTokens();
 
     useEffect(() => {
@@ -31,7 +31,6 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
             const response = await fetchWithRetry();
             if (response.isSuccess) {
                 setData(response.data);
-                return;
             } else if (!getRtk()) {
                 clearTokens();
                 alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
@@ -45,7 +44,7 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
         fetchData();
     }, [apiFunc, rtk]);
 
-    return data;
+    return { data: data || ({} as T), isLoading };
 }
 
 async function handleAtkExpired(rtk: string) {

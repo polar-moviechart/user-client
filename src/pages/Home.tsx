@@ -9,7 +9,6 @@ import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 export default function Home() {
   const targetDate: string = '2004-01-01';
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [data, setData] = useState<MovieInfoDto[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const size: number = 10;
@@ -18,7 +17,7 @@ export default function Home() {
     return MovieApiServicePublic.getMovies(targetDate, page - 1, size);
   }, [targetDate, page]);
 
-  const pagedData = useApiFetch<Page<MovieInfoDto[]>>(fetchMovies) || createEmptyPage<MovieInfoDto[]>();
+  const { data: pagedData, isLoading } = useApiFetch<Page<MovieInfoDto[]>>(fetchMovies) || createEmptyPage<MovieInfoDto[]>();
 
   useEffect(() => {
     if (pagedData && pagedData.content.length > 0) {
@@ -31,7 +30,7 @@ export default function Home() {
 
   const handleScroll = () => {
     const bottom = window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight;
-    if (bottom && !loading && hasMore) {
+    if (bottom && !isLoading && hasMore) {
       setPage(prevPage => prevPage + 1);
     }
     console.log(bottom);
@@ -43,7 +42,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [loading, hasMore]);
+  }, [isLoading, hasMore]);
 
   return (
     <Layout>
@@ -54,7 +53,7 @@ export default function Home() {
           ))}
         </div>
 
-        {loading && <div className="text-center mt-4"> 로딩중 입니다... </div>}
+        {isLoading && <div className="text-center mt-4"> 로딩중 입니다... </div>}
       </div>
     </Layout>
   );

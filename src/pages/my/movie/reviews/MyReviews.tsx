@@ -15,7 +15,7 @@ const MyReviews = () => {
         return UserMovieApiServiceSecure.getMyReviews(page - 1, size);
     }, [page]);
 
-    const pagedReview = useApiFetch<Page<Review[]>>(fetchReviews) || createEmptyPage<Review[]>();
+    const { data: pagedReview, isLoading: reviewLoaded } = useApiFetch<Page<Review[]>>(fetchReviews) || createEmptyPage<Review[]>();
     useEffect(() => {
         if (pagedReview && pagedReview.content.length > 0) {
             setReviews((prevReviews) => [...prevReviews, ...pagedReview.content]);
