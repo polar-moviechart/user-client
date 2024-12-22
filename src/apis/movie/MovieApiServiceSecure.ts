@@ -2,6 +2,7 @@ import axios from "axios";
 import { getAtk, getAuthHeaders } from "../../utils/authUtils";
 import { ApiResponse } from "../ApiResponse";
 import { MovieInfoDto } from "./interfaces/MovieInfoDto";
+import { Page } from "./interfaces/Page";
 
 export class MovieApiServiceSecure {
     private static instatnce: MovieApiServiceSecure | null = null;
@@ -33,14 +34,14 @@ export class MovieApiServiceSecure {
             .then((response) => { return response.data });
     }
 
-    static getLikedMovie(): Promise<ApiResponse<MovieInfoDto[]>> {
+    static getLikedMovie(page: number, size: number): Promise<ApiResponse<Page<MovieInfoDto[]>>> {
         const atk = getAtk();
         const headers = {
             Authorization: `Bearer ${atk}`,
         };
         return axios.get(`${this.baseURL}/likes`, {
             headers: headers,
-            params: { page: 0, size: 10 }
+            params: { page: page, size: size }
         }).then((response) => { return response.data });
     }
 };
