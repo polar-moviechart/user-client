@@ -49,7 +49,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-full max-w-md relative">
+    <div className="bg-white shadow-lg rounded-lg p-4 w-full max-w-md relative mb-3">
       {/*제목*/}
       <div className="flex mb-2 w-full">
         <h3 className="text-gray-500 font-bold text-lg flex flex-grow">
