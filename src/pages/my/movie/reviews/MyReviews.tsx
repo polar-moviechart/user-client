@@ -73,7 +73,6 @@ const MyReviews = () => {
                     </ul>
                 </div>
             </InfiniteScroll>
-
         </Layout>
     );
 }
