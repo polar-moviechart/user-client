@@ -5,6 +5,7 @@ import { getAtk } from "../../utils/authUtils";
 import { ApiResponse } from "../ApiResponse";
 import axios from "axios";
 import { Page } from "./interfaces/Page";
+import { MovieStatDatesRes } from "./interfaces/MovieStatDatesRes";
 
 export class MovieApiServicePublic {
     private static instatnce: MovieApiServicePublic | null = null;
@@ -17,6 +18,10 @@ export class MovieApiServicePublic {
         return MovieApiServicePublic.instatnce;
     }
 
+    static async getDateRange(): Promise<ApiResponse<MovieStatDatesRes>> {
+        return await axios.get(`${this.baseURL}/date-range`)
+            .then((response) => { return response.data });
+      }
 
     static async getMovies(targetDate: string, page: number, size: number): Promise<ApiResponse<Page<MovieInfoDto[]>>> {
         const atk = getAtk();
