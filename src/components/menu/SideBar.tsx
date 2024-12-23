@@ -28,7 +28,7 @@ const SideBar = ({ width = 280 }) => {
                 '로그인이 필요한 서비스입니다.\n로그인 페이지로 이동하시겠습니까?'
             );
         } else {
-            window.location.href = path;
+            window.location.href = `/${path}`;
         }
     }
 
