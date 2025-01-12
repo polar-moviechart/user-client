@@ -34,7 +34,7 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
             } else if (!getRtk()) {
                 clearTokens();
                 alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
-                window.location.href = '/login';
+                // window.location.href = '/login';
             } else {
                 handleApiError(response);
             }
@@ -57,7 +57,7 @@ async function handleAtkExpired(rtk: string) {
         // console.log('새로운 atk = ', Cookies.get('polar-atk'));
     } else {
         clearTokens();
-        alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
+        // alert('세션이 만료되었습니다. 다시 로그인해 주세요.');
         window.location.href = '/login';
     }
 };
