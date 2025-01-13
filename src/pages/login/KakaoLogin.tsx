@@ -2,7 +2,8 @@ import Layout from "../../components/Layout";
 
 const KakaoLogin = () => {
     const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
-    const redirectUrl = "http://localhost:8080/public/api/edge/users/kakao/login/callback";
+    const origin = process.env.REACT_APP_EDGE_SERVICE_URL;
+    const redirectUrl = `${origin}/public/api/edge/users/kakao/login/callback`;
 
     const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectUrl}&response_type=code`;
     const handleLogin = () => {
