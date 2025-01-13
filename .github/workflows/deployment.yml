@@ -22,12 +22,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
 
-      - name: Setting .env
+      - name: Load environment variables from .env.production
         run: |
-          echo "REACT_APP_KAKAO_REST_API_KEY=${{ REACT_APP_KAKAO_REST_API_KEY }}" >> .env.production
-          echo "REACT_APP_KAKAO_JS_KEY=${{ REACT_APP_KAKAO_JS_KEY }}" >> .env.production
-          echo "REACT_APP_EDGE_SERVICE_URL=${{ REACT_APP_EDGE_SERVICE_URL }}" >> .env.production
-          cat .env.production
+          if [ -f .env.production ]; then
+            export $(cat .env.production | xargs)
+          else
+            echo ".env.production file not found!"
+            exit 1
+          fi
 
       - name: Install dependencies
         run: npm install
