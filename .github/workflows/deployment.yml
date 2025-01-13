@@ -24,10 +24,10 @@ jobs:
 
       - name: Setting .env
         run: |
-          echo "REACT_APP_KAKAO_REST_API_KEY=$REACT_APP_KAKAO_REST_API_KEY" >> .env.prod
-          echo "REACT_APP_KAKAO_JS_KEY=$REACT_APP_KAKAO_JS_KEY" >> .env.prod
-          echo "REACT_APP_EDGE_SERVICE_URL=$REACT_APP_EDGE_SERVICE_URL" >> .env.prod
-          cat .env.prod
+          echo "REACT_APP_KAKAO_REST_API_KEY=$REACT_APP_KAKAO_REST_API_KEY" >> .env.production
+          echo "REACT_APP_KAKAO_JS_KEY=$REACT_APP_KAKAO_JS_KEY" >> .env.production
+          echo "REACT_APP_EDGE_SERVICE_URL=$REACT_APP_EDGE_SERVICE_URL" >> .env.production
+          cat .env.production
 
       - name: Install dependencies
         run: npm install
@@ -51,4 +51,3 @@ jobs:
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation --distribution-id ${{secrets.DEV_AWS_DISTRIBUTION_ID}} --paths "/*"
 
-        
