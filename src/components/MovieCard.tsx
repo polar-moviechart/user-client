@@ -31,6 +31,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
       if (thumbnail) {
         const url = await getPresignedUrl(movie.thumbnail);
         setImageUrl(url);
+        console.log(url);
       }
   };
   fetchImageUrl();
