@@ -20,15 +20,15 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const rating = movie.rating;
   const thumbnail = movie.thumbnail;
   const [liked, setLiked] = useState(movie.isLike);
-  const s3Url = process.env.S3_PROD_URL;
   const defaultPoster = "/empty_image.jpg";
   const [imageUrl, setImageUrl] = useState<string>(defaultPoster);
 
   const { modalState, openModal, closeModal } = useModal();
 
+  // s3에서 이미지 불러오기
   useEffect(() => {
     const fetchImageUrl = async () => {
-      if (movie.thumbnail) {
+      if (thumbnail) {
         const url = await getPresignedUrl(movie.thumbnail);
         setImageUrl(url);
       }
