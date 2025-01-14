@@ -1,7 +1,6 @@
 import AWS from 'aws-sdk';
 
-const bucketName = process.env.DEV_AWS_S3_BUCKET || '';
-
+const bucketName = process.env.REACT_APP_DEV_AWS_S3_BUCKET || '';
 const defaultPoster = "/empty_image.jpg";
 // const accessKeyId =  process.env.REACT_APP_AWS_ACCESS_KEY_ID;
 // const secretAccessKey =  process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
