@@ -3,6 +3,7 @@ import { movieLeadactorDto } from "./MovieLeadactorDto";
 
 export interface MovieInfoDto {
     code: number;
+    thumbnail: string;
     ranking: number;
     rating: number;
     isLike: boolean;

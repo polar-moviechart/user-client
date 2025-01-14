@@ -3,12 +3,13 @@ import StarRatingSum from "./StarRatingSum";
 import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 import UserMovieApiServiceSecure from "../apis/user/UserMovieApiServiceSecure";
 import { UpdateLikeRes } from "../apis/movie/interfaces/UpdateLikeRes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { safeApiCall } from "../apis/SafeApiCall";
 import { ApiResponse } from "../apis/ApiResponse";
 import CustomModal from "./CustomModal";
 import useModal from "../hooks/UseModal";
 import { getRtk } from "../utils/authUtils";
+import { getPresignedUrl } from "./S3";
 
 interface MovieCardProps {
   movie: MovieInfoDto;
@@ -17,10 +18,23 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   const { poster, movieDirectorDtos, movieLeadactorDtos } = movie;
   const rating = movie.rating;
-  const defaultPoster = "/empty_image.jpg";
+  const thumbnail = movie.thumbnail;
   const [liked, setLiked] = useState(movie.isLike);
+  const s3Url = process.env.S3_PROD_URL;
+  const defaultPoster = "/empty_image.jpg";
+  const [imageUrl, setImageUrl] = useState<string>(defaultPoster);
 
   const { modalState, openModal, closeModal } = useModal();
+
+  useEffect(() => {
+    const fetchImageUrl = async () => {
+      if (movie.thumbnail) {
+        const url = await getPresignedUrl(movie.thumbnail);
+        setImageUrl(url);
+      }
+  };
+  fetchImageUrl();
+  }, [thumbnail]);
 
   const handleLikeClick = () => {
     const rtk = getRtk();
@@ -85,7 +99,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
           to={`/movie?code=${movie.code}`}
         >
           <img
-            src={poster && poster.length > 0 ? poster[0] : defaultPoster}
+            src={imageUrl}
             alt={movie.title}
             className="rounded-md"
           />
