@@ -1,15 +1,15 @@
 import AWS from 'aws-sdk';
 
-const bucketName = process.env.DEV_AWS_S3_BUCKET || '';
+const bucketName = process.env.REACT_APP_DEV_AWS_S3_BUCKET || '';
 const defaultPoster = "/empty_image.jpg";
-// const accessKeyId =  process.env.AWS_ACCESS_KEY_ID;
-// const secretAccessKey =  process.env.AWS_SECRET_ACCESS_KEY;
-// const region =  process.env.AWS_REGION;
+// const accessKeyId =  process.env.REACT_APP_AWS_ACCESS_KEY_ID;
+// const secretAccessKey =  process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
+// const region =  process.env.REACT_APP_AWS_REGION;
 
 const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION,
+  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+  region: process.env.REACT_APP_AWS_REGION,
 });
 
 // 인증 상태 관리 객체

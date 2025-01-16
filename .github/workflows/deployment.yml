@@ -28,10 +28,10 @@ jobs:
           echo "REACT_APP_KAKAO_JS_KEY=${{ secrets.REACT_APP_KAKAO_JS_KEY }}" >> .env.production
           echo "REACT_APP_EDGE_SERVICE_URL=${{ secrets.REACT_APP_EDGE_SERVICE_URL }}" >> .env.production
 
-          echo "DEV_AWS_S3_BUCKET=${{ secrets.DEV_AWS_S3_BUCKET }}" >> .env.production
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env.production
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env.production
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env.production
+          echo "REACT_APP_DEV_AWS_S3_BUCKET=${{ secrets.REACT_APP_DEV_AWS_S3_BUCKET }}" >> .env.production
+          echo "REACT_APP_AWS_ACCESS_KEY_ID=${{ secrets.REACT_APP_AWS_ACCESS_KEY_ID }}" >> .env.production
+          echo "REACT_APP_AWS_SECRET_ACCESS_KEY=${{ secrets.REACT_APP_AWS_SECRET_ACCESS_KEY }}" >> .env.production
+          echo "REACT_APP_AWS_REGION=${{ secrets.REACT_APP_AWS_REGION }}" >> .env.production
 
       - name: Install dependencies
         run: npm install
@@ -45,12 +45,12 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.REACT_APP_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.REACT_APP_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.REACT_APP_AWS_REGION }}
 
       - name: Deploy to S3
-        run: aws s3 sync ./build s3://${{ secrets.DEV_AWS_S3_BUCKET }}/prod/ --delete
+        run: aws s3 sync ./build s3://${{ secrets.REACT_APP_DEV_AWS_S3_BUCKET }}/prod/ --delete
 
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation --distribution-id ${{secrets.DEV_AWS_DISTRIBUTION_ID}} --paths "/*"
