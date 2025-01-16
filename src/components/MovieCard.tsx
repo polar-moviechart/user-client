@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import StarRatingSum from "./StarRatingSum";
 import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 import UserMovieApiServiceSecure from "../apis/user/UserMovieApiServiceSecure";
@@ -16,7 +16,7 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-  const { poster, movieDirectorDtos, movieLeadactorDtos } = movie;
+  const {movieDirectorDtos, movieLeadactorDtos } = movie;
   const rating = movie.rating;
   const thumbnail = movie.thumbnail;
   const [liked, setLiked] = useState(movie.isLike);
