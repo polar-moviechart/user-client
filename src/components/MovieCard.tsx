@@ -63,7 +63,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 w-full max-w-md relative mb-3">
+    <div className="bg-white shadow-lg rounded-lg p-4 max-w-md mb-3">
       {/*제목*/}
       <div className="flex mb-2 w-full">
         <h3 className="text-gray-500 font-bold text-lg flex flex-grow">
@@ -92,19 +92,14 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         />
       </div>
 
-      {/* <div className="bg-orange-500 flex flex-row"> */}
-      <div className="bg-red-500 flex">
         {/* 이미지 */}
-        <Link
-          to={`/movie?code=${movie.code}`}
-        >
+        <Link to={`/movie?code=${movie.code}`}>
           <img
             src={imageUrl}
             alt={movie.title}
-            className="rounded-md"
+            className="rounded-md w-full object-cover"
           />
         </Link>
-      </div>
 
       {/* 텍스트 정보 */}
       {/* 추가 정보 */}
