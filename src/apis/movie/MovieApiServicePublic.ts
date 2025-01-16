@@ -15,32 +15,31 @@ setResponseInterceptor(apiInstance);
 
 export const getDateRange = async ():
     Promise<ApiResponse<MovieStatDatesRes>> => {
-    const response = await apiInstance.get('/date-range');
-    return response.data;
+    return (await apiInstance.get('/date-range')).data;
 }
 
 export const getMovies = async (targetDate: string, page: number, size: number):
     Promise<ApiResponse<Page<MovieInfoDto[]>>> => {
-    const response = await apiInstance.get('', {
+    return (
+        await apiInstance.get('', {
         params: { targetDate, page, size },
-    });
-    
-    return response.data;
+    })
+    ).data;
 }
 
 export const getMovie = async (code: string):
     Promise<ApiResponse<MovieInfoDto>> => {
-    const response = apiInstance.get(`${code}`);
-    return (await response).data;
+    return (await apiInstance.get(`${code}`)).data;
 }
 
 export const getMovieStats = async (code: string, statType: StatType, limit: number):
     Promise<ApiResponse<MovieStatDto>> => {
-    const response = await apiInstance.get(`/${code}/stats`, {
+    return (
+        await apiInstance.get(`/${code}/stats`, {
         params: {
             type: statType,
             limit: limit
         }
-    });
-    return response.data;
+    })
+    ).data;
 }
