@@ -4,8 +4,9 @@ import createApiInstance from "./apiInstance";
 import { ApiResponse } from "./ApiResponse";
 import GenerateTokenRes from "./user/interfaces/GenerateTokenRes";
 
-// 엑세스 토큰 설정 및 리프레쉬 토큰 갱신, 인터셉터 설정
-
+/*
+* 엑세스 토큰 설정 및 엑세스 토큰을 갱신하는 모듈
+*/
 const baseURL = process.env.REACT_APP_EDGE_SERVICE_URL + "/secure/api/v1/users";
 const refreshAccessTokenApi = createApiInstance(baseURL);
 
