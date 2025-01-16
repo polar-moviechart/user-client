@@ -21,26 +21,26 @@ export const getDateRange = async ():
 
 export const getMovies = async (targetDate: string, page: number, size: number):
     Promise<ApiResponse<Page<MovieInfoDto[]>>> => {
-        const response = await apiInstance.get('', {
-            params: { targetDate, page, size },
-        });
-        
-        return response.data;
+    const response = await apiInstance.get('', {
+        params: { targetDate, page, size },
+    });
+    
+    return response.data;
 }
 
 export const getMovie = async (code: string):
     Promise<ApiResponse<MovieInfoDto>> => {
-        const response = apiInstance.get(`${code}`);
-        return (await response).data;
+    const response = apiInstance.get(`${code}`);
+    return (await response).data;
 }
 
 export const getMovieStats = async (code: string, statType: StatType, limit: number):
     Promise<ApiResponse<MovieStatDto>> => {
-        const response = await apiInstance.get(`/${code}/stats`, {
-            params: {
-                type: statType,
-                limit: limit
-            }
-        });
-        return response.data;
+    const response = await apiInstance.get(`/${code}/stats`, {
+        params: {
+            type: statType,
+            limit: limit
+        }
+    });
+    return response.data;
 }
