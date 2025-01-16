@@ -10,12 +10,12 @@ import { DataPoint } from "../../components/chart/DataPoint";
 import { Dataset } from "../../components/chart/Dataset";
 import { StatType } from "../../apis/movie/type/StatType";
 import { useApiFetch } from "../../hooks/FetchApiFunc";
-import { MovieApiServicePublic } from "../../apis/movie/MovieApiServicePublic";
 import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
 import { ApiResponse } from "../../apis/ApiResponse";
 import { MovieStatDto } from "../../apis/movie/interfaces/MovieStatDto";
 import Reviews from "../../components/review/Reviews";
+import { getMovie, getMovieStats } from "../../apis/movie/MovieApiServicePublic";
 
 Chart.register(...registerables);
 
@@ -35,9 +35,9 @@ export default function Movie() {
   const statType: StatType = 'RANKING';
 
   const fetchMovie = useCallback((): Promise<ApiResponse<MovieInfoDto>> =>
-    MovieApiServicePublic.getMovie(code), [code]);
+    getMovie(code), [code]);
   const fetchStats = useCallback((): Promise<ApiResponse<MovieStatDto>> =>
-    MovieApiServicePublic.getMovieStats(code, statType, 30), [code, statType]);
+    getMovieStats(code, statType, 30), [code, statType]);
 
   const { data: fetchedMovieInfo, isLoading: movieInfoLoaded } = useApiFetch<MovieInfoDto>(fetchMovie);
   const { data: fetchMovieStats, isLoading: movieStatsLoaded } = useApiFetch<MovieStatDto>(fetchStats);
