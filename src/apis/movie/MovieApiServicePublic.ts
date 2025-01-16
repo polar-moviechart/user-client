@@ -1,60 +1,46 @@
 import { MovieInfoDto } from "./interfaces/MovieInfoDto";
 import { StatType } from "./type/StatType";
 import { MovieStatDto } from "./interfaces/MovieStatDto";
-import { getAtk } from "../../utils/authUtils";
 import { ApiResponse } from "../ApiResponse";
-import axios from "axios";
 import { Page } from "./interfaces/Page";
 import { MovieStatDatesRes } from "./interfaces/MovieStatDatesRes";
+import createApiInstance from "../apiInstance";
+import { setRequestInterceptor, setResponseInterceptor } from "../authInterceptor";
 
-export class MovieApiServicePublic {
-    private static instatnce: MovieApiServicePublic | null = null;
-    private static baseURL = process.env.REACT_APP_EDGE_SERVICE_URL + "/public/api/v1/movies";
+const apiUrl = process.env.REACT_APP_EDGE_SERVICE_URL + "/public/api/v1/movies";
+const apiInstance = createApiInstance(apiUrl);
 
-    constructor() {
-        if (!MovieApiServicePublic.instatnce) {
-            MovieApiServicePublic.instatnce = new MovieApiServicePublic();
-        }
-        return MovieApiServicePublic.instatnce;
-    }
+setRequestInterceptor(apiInstance);
+setResponseInterceptor(apiInstance);
 
-    static async getDateRange(): Promise<ApiResponse<MovieStatDatesRes>> {
-        return await axios.get(`${this.baseURL}/date-range`)
-            .then((response) => { return response.data });
-      }
+export const getDateRange = async ():
+    Promise<ApiResponse<MovieStatDatesRes>> => {
+    const response = await apiInstance.get('/date-range');
+    return response.data;
+}
 
-    static async getMovies(targetDate: string, page: number, size: number): Promise<ApiResponse<Page<MovieInfoDto[]>>> {
-        const atk = getAtk();
-        const headers = {
-            Authorization: `Bearer ${atk}`,
-        };
+export const getMovies = async (targetDate: string, page: number, size: number):
+    Promise<ApiResponse<Page<MovieInfoDto[]>>> => {
+        const response = await apiInstance.get('', {
+            params: { targetDate, page, size },
+        });
+        
+        return response.data;
+}
 
-        return await axios.get(`${this.baseURL}`, {
-            headers: headers,
-            params: { targetDate, page: page, size: size },
-        })
-        .then((response) => {return response.data});
-    }
+export const getMovie = async (code: string):
+    Promise<ApiResponse<MovieInfoDto>> => {
+        const response = apiInstance.get(`${code}`);
+        return (await response).data;
+}
 
-    static async getMovie(code: string): Promise<ApiResponse<MovieInfoDto>> {
-        const atk = getAtk();
-        const headers = {
-            Authorization: `Bearer ${atk}`,
-        };
-
-        return await axios.get(`${this.baseURL}/${code}`, {
-            headers: headers
-        })
-        .then((response) => {return response.data});
-    }
-
-    static async getMovieStats(code: string, statType: StatType, limit: number): Promise<ApiResponse<MovieStatDto>> {
-        return await axios.get(`${this.baseURL}/${code}/stats`, {
+export const getMovieStats = async (code: string, statType: StatType, limit: number):
+    Promise<ApiResponse<MovieStatDto>> => {
+        const response = await apiInstance.get(`/${code}/stats`, {
             params: {
                 type: statType,
                 limit: limit
             }
-        })
-        .then((response) => {return response.data});
-    };
-};
+        });
+        return response.data;
+}
