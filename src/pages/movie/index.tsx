@@ -12,10 +12,9 @@ import { StatType } from "../../apis/movie/type/StatType";
 import { useApiFetch } from "../../hooks/FetchApiFunc";
 import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
-import { ApiResponse } from "../../apis/ApiResponse";
 import { MovieStatDto } from "../../apis/movie/interfaces/MovieStatDto";
 import Reviews from "../../components/review/Reviews";
-import { getMovie, getMovieStats } from "../../apis/movie/MovieApiServicePublic";
+import { getMovie, getMovies, getMovieStats } from "../../apis/movie/MovieApiServicePublic";
 
 Chart.register(...registerables);
 
@@ -25,8 +24,13 @@ export default function Movie() {
   const code: string = searchParams.get('code') || '';
 
   const [movieInfo, setMovieInfo] = useState<MovieInfoDto | null>(null);
+  const [movieLading, setMovieLoading] = useState<boolean>(true);
+
   const [movieStats, setMovieStats] = useState<MovieStats[]>([]);
+  const [statLoading, setStatLoading] = useState<boolean>(true);
   const [chartData, setChartData] = useState<{ labels: Date[], datasets: Dataset[] }>
+
+  
   ({
     labels: [],
     datasets: [],
@@ -34,24 +38,29 @@ export default function Movie() {
 
   const statType: StatType = 'RANKING';
 
-  const fetchMovie = useCallback((): Promise<ApiResponse<MovieInfoDto>> =>
-    getMovie(code), [code]);
-  const fetchStats = useCallback((): Promise<ApiResponse<MovieStatDto>> =>
+  const fetchStats = useCallback((): Promise<MovieStatDto> =>
     getMovieStats(code, statType, 30), [code, statType]);
 
-  const { data: fetchedMovieInfo, isLoading: movieInfoLoaded } = useApiFetch<MovieInfoDto>(fetchMovie);
-  const { data: fetchMovieStats, isLoading: movieStatsLoaded } = useApiFetch<MovieStatDto>(fetchStats);
+  useEffect(() => {
+    const fetchMovie = async () => {
+      setMovieLoading(true);
+      const response: MovieInfoDto = await getMovie(code);
+      setMovieInfo(response);
+      setMovieLoading(false);
+    };
+
+    fetchMovie();
+  }, [movieInfo]);
 
   useEffect(() => {
-    if (fetchedMovieInfo) {
-      setMovieInfo(fetchedMovieInfo);
+    const fetchStats = async () => {
+      setStatLoading(true);
+      const response: MovieStatDto = await getMovieStats(code, statType, 30);
+      setMovieStats(response.statDtos);
+      setStatLoading(false);
     }
-  }, [movieInfo, fetchedMovieInfo]);
 
-  useEffect(() => {
-    if (fetchMovieStats.statDtos) {
-      setMovieStats(fetchMovieStats.statDtos)
-    }
+    fetchStats();
 
     const dataPoints: DataPoint[] = transformStats(movieStats);
     const dataset: { labels: Date[], datasets: Dataset[] } = {
@@ -68,7 +77,7 @@ export default function Movie() {
       ],
     };
     setChartData(dataset);
-  }, [movieStats, fetchMovieStats]);
+  }, [movieStats]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
