@@ -1,12 +1,12 @@
 import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
-import { MovieApiServicePublic } from "../apis/movie/MovieApiServicePublic";
-import { useApiFetch } from "../hooks/FetchApiFunc";
 import { useCallback, useEffect, useState } from "react";
-import { createEmptyPage, Page } from "../apis/movie/interfaces/Page";
 import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 import InfiniteScroll, { infiniteScrollHabndler } from "../components/infinitescroll/InfiniteScroll";
 import { useSearchParams } from "react-router-dom";
+import { getDateRange, getMovies } from "../apis/movie/MovieApiServicePublic";
+import { ApiResponse } from "../apis/ApiResponse";
+import { Page } from "../apis/movie/interfaces/Page";
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,30 +15,54 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [data, setData] = useState<MovieInfoDto[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [startDate, setStartDate] = useState<string>("2004-01-01");
-  const [endDate, setEndDate] = useState<string>("2004-01-02");
+  const [startDate, setStartDate] = useState<string>();
+  const [endDate, setEndDate] = useState<string>();
+  const [movieLoading, setMovieLoading] = useState<boolean>(true);
+
+  const [isInitialized, setIsInitialized] = useState(false);
   const size: number = 10;
 
   useEffect(() => {
-    MovieApiServicePublic.getDateRange().then((response) => {
-      if (response) {
-        setStartDate(response.data.startDate);
-        setEndDate(response.data.endDate);
-        setDate(response.data.endDate);
-        setSearchParams({ targetDate: response.data.endDate });
+    // 초기화를 위한 비동기 작업
+    const initialize = async () => {
+      const dateRange = await getDateRange();
+      if (dateRange) {
+        setStartDate(dateRange.data.startDate);
+        setEndDate(dateRange.data.endDate);
+        setDate(dateRange.data.endDate);
+        setSearchParams({ targetDate: dateRange.data.endDate });
       }
-    });
-  }, []);
+    };
+
+    if (isInitialized === false) {
+      initialize();
+      setIsInitialized(true);
+    }
+  }, [isInitialized]);
 
   useEffect(() => {
-    if (!searchParams.has("targetDate")) {
-      setSearchParams({ targetDate: targetDate });
-    } else {
-      setPage(1);
-      setData([]);
-      setHasMore(true);
+    const fetchMovies = async () => {
+      setMovieLoading(true);
+      const movies: Page<MovieInfoDto[]> = await getMovies(targetDate, page - 1, size);
+      setData(movies.content);
+      setHasMore(!movies.last);
+      setMovieLoading(false);
+    };
+
+    if (isInitialized) {
+      fetchMovies();
     }
-  }, [targetDate, setSearchParams]);
+  }, [isInitialized, targetDate, page, size]);
+
+  // useEffect(() => {
+  //   if (isInitialized && !searchParams.has("targetDate")) {
+  //     setSearchParams({ targetDate: targetDate });
+  //   } else {
+  //     setPage(1);
+  //     setData([]);
+  //     setHasMore(true);
+  //   }
+  // }, [isInitialized]);
 
   const handleDateChange = (newDate: string) => {
     setDate(newDate);
@@ -48,22 +72,14 @@ export default function Home() {
     setHasMore(true);
   };
 
-  const fetchMovies = useCallback(() => {
-    return MovieApiServicePublic.getMovies(targetDate, page - 1, size);
-  }, [targetDate, page]);
-
-  const { data: pagedData, isLoading: movieLoading } = useApiFetch<Page<MovieInfoDto[]>>(fetchMovies) || createEmptyPage<MovieInfoDto[]>();
-
   useEffect(() => {
-    if (!movieLoading) {
-      if (pagedData && pagedData.content.length > 0) {
-        setData((prevData) => [...prevData, ...pagedData.content]);
-        if (pagedData.content.length < size) {
-          setHasMore(false);
-        }
+    if (data && data.length > 0) {
+      setData((prevData) => [...prevData, ...data]);
+      if (data.length < size) {
+        setHasMore(false);
       }
     }
-  }, [pagedData])
+  }, [page])
 
   // 무한 스크롤
   const setNextPage = useCallback<infiniteScrollHabndler>(() => {
@@ -73,6 +89,17 @@ export default function Home() {
       setPage((prevPage) => prevPage + 1);
     }
   }, [movieLoading]);
+
+  if (!isInitialized) {
+    // 초기화가 완료되지 않았을 경우 로딩 화면 표시
+    return (
+      <Layout>
+        <div className="bg-orange-300 min-h-screen flex justify-center items-center">
+          <div className="text-center">날짜 데이터를 불러오는 중입니다...</div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
