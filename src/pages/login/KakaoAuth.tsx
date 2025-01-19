@@ -27,7 +27,7 @@ const KakaoAuth = ({ Layout }: KakaoAuthProps) => {
             if (response.isSuccess) {
                 setAuthHeaders(response.data.accessToken, response.data.refreshToken);
                 setIsLoggedIn(true)
-                navigate('/');
+                // navigate('/');
             }
         };
 
