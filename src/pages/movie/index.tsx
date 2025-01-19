@@ -18,7 +18,11 @@ import { getMovie, getMovies, getMovieStats } from "../../apis/movie/MovieApiSer
 
 Chart.register(...registerables);
 
-export default function Movie() {
+type MovieProps = {
+  Layout: React.FC<{ children: React.ReactNode }>;
+}
+
+export default function Movie({ Layout }: MovieProps) {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const code: string = searchParams.get('code') || '';

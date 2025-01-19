@@ -1,17 +1,18 @@
-import Layout from "../components/Layout";
 import MovieCard from "../components/MovieCard";
 import { useCallback, useEffect, useState } from "react";
 import { MovieInfoDto } from "../apis/movie/interfaces/MovieInfoDto";
 import InfiniteScroll, { infiniteScrollHabndler } from "../components/infinitescroll/InfiniteScroll";
 import { useSearchParams } from "react-router-dom";
 import { getDateRange, getMovies } from "../apis/movie/MovieApiServicePublic";
-import { ApiResponse } from "../apis/ApiResponse";
 import { Page } from "../apis/movie/interfaces/Page";
 
-export default function Home() {
+type HomeProps = {
+  Layout: React.FC<{ children: React.ReactNode }>;
+}
+
+export default function Home({ Layout }: HomeProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const targetDate: string = searchParams.get("targetDate") || "2004-01-01";
-  const [date, setDate] = useState(targetDate);
+  const [date, setDate] = useState('');
   const [page, setPage] = useState(1);
   const [data, setData] = useState<MovieInfoDto[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -41,10 +42,13 @@ export default function Home() {
   }, [isInitialized]);
 
   useEffect(() => {
+    if (!date) return; // date가 설정되기 전에 fetchMovies가 호출되지 않도록 방지
+
     const fetchMovies = async () => {
       setMovieLoading(true);
-      const movies: Page<MovieInfoDto[]> = await getMovies(targetDate, page - 1, size);
-      setData(movies.content);
+      const movies: Page<MovieInfoDto[]> = await getMovies(date, page - 1, size);
+      // 이전 데이터를 유지하며 새 데이터를 추가
+      setData((prevData) => [...prevData, ...movies.content]);
       setHasMore(!movies.last);
       setMovieLoading(false);
     };
@@ -52,17 +56,7 @@ export default function Home() {
     if (isInitialized) {
       fetchMovies();
     }
-  }, [isInitialized, targetDate, page, size]);
-
-  // useEffect(() => {
-  //   if (isInitialized && !searchParams.has("targetDate")) {
-  //     setSearchParams({ targetDate: targetDate });
-  //   } else {
-  //     setPage(1);
-  //     setData([]);
-  //     setHasMore(true);
-  //   }
-  // }, [isInitialized]);
+  }, [isInitialized, date, page, size]);
 
   const handleDateChange = (newDate: string) => {
     setDate(newDate);
@@ -71,15 +65,6 @@ export default function Home() {
     setData([]);
     setHasMore(true);
   };
-
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setData((prevData) => [...prevData, ...data]);
-      if (data.length < size) {
-        setHasMore(false);
-      }
-    }
-  }, [page])
 
   // 무한 스크롤
   const setNextPage = useCallback<infiniteScrollHabndler>(() => {
@@ -107,7 +92,7 @@ export default function Home() {
         <div className="flex flex-col items-center space-y-8 mt-8">
           <input
             type="date"
-            value={targetDate}
+            value={date}
             min={startDate}
             max={endDate}
             onChange={(e) => handleDateChange(e.target.value)}
