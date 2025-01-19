@@ -23,17 +23,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
 
   const { modalState, openModal, closeModal } = useModal();
 
-  // s3에서 이미지 불러오기
-  // useEffect(() => {
-  //   const fetchImageUrl = async () => {
-  //     if (thumbnail) {
-  //       const url = await getPresignedUrl(movie.thumbnail);
-  //       setImageUrl(url);
-  //     }
-  // };
-  // fetchImageUrl();
-  // }, [thumbnail]);
-
   const handleLikeClick = () => {
     const rtk = getRtk();
     if (!rtk) {
