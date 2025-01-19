@@ -34,16 +34,13 @@ export default function Movie({ Layout }: MovieProps) {
   const [statLoading, setStatLoading] = useState<boolean>(true);
   const [chartData, setChartData] = useState<{ labels: Date[], datasets: Dataset[] }>
 
-  
-  ({
-    labels: [],
-    datasets: [],
-  });
+
+    ({
+      labels: [],
+      datasets: [],
+    });
 
   const statType: StatType = 'RANKING';
-
-  const fetchStats = useCallback((): Promise<MovieStatDto> =>
-    getMovieStats(code, statType, 30), [code, statType]);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -54,7 +51,7 @@ export default function Movie({ Layout }: MovieProps) {
     };
 
     fetchMovie();
-  }, [movieInfo]);
+  }, [code]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -81,7 +78,7 @@ export default function Movie({ Layout }: MovieProps) {
       ],
     };
     setChartData(dataset);
-  }, [movieStats]);
+  }, [code]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
