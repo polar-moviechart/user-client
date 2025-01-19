@@ -4,7 +4,11 @@ import { UserApiServicePublic } from "../../apis/user/UserApiServicePublic";
 import { setAuthHeaders } from "../../utils/authUtils";
 import { safeApiCall } from "../../apis/SafeApiCall";
 
-const KakaoAuth = () => {
+type KakaoAuthProps = {
+    Layout: React.FC<{ children: React.ReactNode }>;
+};
+
+const KakaoAuth = ({ Layout }: KakaoAuthProps) => {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParam = new URLSearchParams(location.search);

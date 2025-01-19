@@ -4,9 +4,12 @@ import { MovieApiServiceSecure } from "../../../../apis/movie/MovieApiServiceSec
 import { useApiFetch } from "../../../../hooks/FetchApiFunc";
 import { createEmptyPage, Page } from "../../../../apis/movie/interfaces/Page";
 import InfiniteScroll, { infiniteScrollHabndler } from "../../../../components/infinitescroll/InfiniteScroll";
-import Layout from "../../../../components/Layout";
 
-const MyRatings = () => {
+type MyRatingsProps = {
+    Layout: React.FC<{ children: React.ReactNode }>;
+};
+
+const MyRatings = ({Layout}: MyRatingsProps) => {
     const [ratedMovies, setRatedMovies] = useState<MovieRatingRes[]>([]);
     const [page, setPage] = useState<number>(1);
     const [hasMore, setHasMore] = useState<boolean>(true);

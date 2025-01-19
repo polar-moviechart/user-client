@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import Layout from "../../../../components/Layout";
 import { useApiFetch } from "../../../../hooks/FetchApiFunc";
 import { MovieInfoDto } from "../../../../apis/movie/interfaces/MovieInfoDto";
 import { MovieApiServiceSecure } from "../../../../apis/movie/MovieApiServiceSecure";
@@ -7,7 +6,11 @@ import MovieCard from "../../../../components/MovieCard";
 import InfiniteScroll, { infiniteScrollHabndler } from "../../../../components/infinitescroll/InfiniteScroll";
 import { createEmptyPage, Page } from "../../../../apis/movie/interfaces/Page";
 
-const MyLikes = () => {
+type MyLikesProps = {
+    Layout: React.FC<{ children: React.ReactNode }>;
+};
+
+const MyLikes = ({ Layout }: MyLikesProps) => {
     const [likedMovies, setLikedMovies] = useState<MovieInfoDto[]>([]);
     const [page, setPage] = useState<number>(1);
     const [hasMore, setHasMore] = useState<boolean>(true);

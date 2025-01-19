@@ -6,7 +6,11 @@ import Review from "../../../../apis/user/interfaces/Review";
 import { createEmptyPage, Page } from "../../../../apis/movie/interfaces/Page";
 import InfiniteScroll, { infiniteScrollHabndler } from "../../../../components/infinitescroll/InfiniteScroll";
 
-const MyReviews = () => {
+type MyReviewProps = {
+    Layout: React.FC<{ children: React.ReactNode }>;
+};
+
+const MyReviews = ({ Layout }: MyReviewProps) => {
     const [reviews, setReviews] = useState<Review[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);

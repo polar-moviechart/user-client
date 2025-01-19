@@ -1,6 +1,10 @@
 import Layout from "../../components/Layout";
 
-const KakaoLogin = () => {
+type KakaoLoginProps = {
+    Layout: React.FC<{ children: React.ReactNode }>;
+};
+
+const KakaoLogin = ({ Layout }: KakaoLoginProps) => {
     const restApiKey = process.env.REACT_APP_KAKAO_REST_API_KEY;
     const origin = process.env.REACT_APP_EDGE_SERVICE_URL;
     const redirectUrl = `${origin}/public/api/edge/users/kakao/login/callback`;
