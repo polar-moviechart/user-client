@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { UserApiServicePublic } from "../../apis/user/UserApiServicePublic";
 import { setAuthHeaders } from "../../utils/authUtils";
 import { safeApiCall } from "../../apis/SafeApiCall";
@@ -10,12 +10,10 @@ type KakaoAuthProps = {
 
 const KakaoAuth = ({ Layout }: KakaoAuthProps) => {
     const location = useLocation();
-    const navigate = useNavigate();
     const searchParam = new URLSearchParams(location.search);
+    const navigate = useNavigate();
 
     const kakaoUserId = Number(searchParam.get('id') ?? '0');
-
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         if (kakaoUserId === 0) {
@@ -26,8 +24,7 @@ const KakaoAuth = ({ Layout }: KakaoAuthProps) => {
             const response = await safeApiCall(() => UserApiServicePublic.loginKakao(kakaoUserId));
             if (response.isSuccess) {
                 setAuthHeaders(response.data.accessToken, response.data.refreshToken);
-                setIsLoggedIn(true)
-                // navigate('/');
+                navigate('/');
             }
         };
 
