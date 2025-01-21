@@ -17,10 +17,10 @@ export default function HomeButton() {
     return (
         <div className="fixed top-4 left-4">
             <button
-                className="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-md font-semibold"
+                className="text-white bg-blue-500 hover:bg-blue-600 px-3 py-1.5 rounded-md font-semibold"
                 onClick={handleClick}
             >
-                홈페이지로 이동
+                홈페이지
             </button>
         </div>
     );

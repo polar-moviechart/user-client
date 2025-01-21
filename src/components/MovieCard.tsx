@@ -15,7 +15,7 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-  const {movieDirectorDtos, movieLeadactorDtos } = movie;
+  const { movieDirectorDtos, movieLeadactorDtos } = movie;
   const rating = movie.rating;
   const [liked, setLiked] = useState(movie.isLike);
   const defaultPoster = "/empty_image.jpg";
@@ -50,7 +50,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4 max-w-md mb-3">
+    <div className="bg-gray-100 shadow-lg rounded-lg p-4 max-w-md mb-3">
       {/*제목*/}
       <div className="flex mb-2 w-full">
         <h3 className="text-gray-500 font-bold text-lg flex flex-grow">
@@ -79,7 +79,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         />
       </div>
 
-        {/* 이미지 */}
+      {/* 이미지 */}
+      <div>
         <Link to={`/movie?code=${movie.code}`}>
           <img
             src={movie.thumbnail ? movie.thumbnail : defaultPoster}
@@ -87,10 +88,11 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
             className="rounded-md w-full object-cover"
           />
         </Link>
+      </div>
 
       {/* 텍스트 정보 */}
       {/* 추가 정보 */}
-      <div className="bg-lime-300 text-sm text-gray-700 text-left p-2 flex-grow w-full">
+      <div className="bg-blue-200 text-sm text-gray-700 text-left  mt-2 p-2 flex-grow w-full">
         <p><strong>영화 정보:</strong> {movie.details}</p>
         <p><strong>개봉일:</strong> {movie.releaseDate}</p>
         <p><strong>제작연도:</strong> {movie.productionYear}</p>

@@ -8,7 +8,6 @@ import Modal from 'react-modal';
 import MyReviews from './pages/my/movie/reviews/MyReviews';
 import MyLikes from './pages/my/movie/likes/MyLikes';
 import MyRatings from './pages/my/movie/ratings/MyRatings';
-import { useState } from 'react';
 import Layout from './components/Layout';
 
 Modal.setAppElement('#root');

@@ -88,20 +88,18 @@ export default function Movie({ Layout }: MovieProps) {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-100">
-
-
-        <div className="bg-lime-50 flex justify-center">
+      <div className="bg-white min-h-screen">
+        <div className="bg-white flex justify-center">
           {/* 영화 카드 섹션 */}
-          <div className="bg-gray-200 flex flex-col items-center">
+          <div className="flex flex-col items-center">
             {movieInfo && <MovieCard key={movieInfo?.code} movie={movieInfo} />}
 
             {/* 라인차트 표시 */}
-            <div className="w-full width=" style={{ width: cardWidth, height: chartHeight }}>
+            <div className="w-full bg-white" style={{ width: cardWidth, height: chartHeight }}>
               <Line data={chartData} />
             </div>
 
-            <div className="bg-sky-200 flex flex-col items-center mt-4 mb-4">
+            <div className="flex flex-col items-center mt-4 mb-4">
               <p className="text-black">평점을 입력해주세요.</p>
               <StarRating code={Number(code)} initialRating={movieInfo?.rating ?? 0} />
             </div>

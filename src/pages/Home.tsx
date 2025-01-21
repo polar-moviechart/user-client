@@ -79,7 +79,7 @@ export default function Home({ Layout }: HomeProps) {
     // 초기화가 완료되지 않았을 경우 로딩 화면 표시
     return (
       <Layout>
-        <div className="bg-orange-300 min-h-screen flex justify-center items-center">
+        <div className="min-h-screen flex justify-center items-center">
           <div className="text-center">날짜 데이터를 불러오는 중입니다...</div>
         </div>
       </Layout>
@@ -88,7 +88,7 @@ export default function Home({ Layout }: HomeProps) {
 
   return (
     <Layout>
-      <div className="bg-orange-300 min-h-screen">
+      <div className="min-h-screen">
         <div className="flex flex-col items-center space-y-8 mt-8">
           <input
             type="date"

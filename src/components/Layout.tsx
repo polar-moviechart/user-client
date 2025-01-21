@@ -7,7 +7,7 @@ import SideBar from "./menu/SideBar";
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <div>
-            <div className="bg-orange-300 min-h-screen flex flex-col">
+            <div className="bg-gray-200 min-h-screen flex flex-col">
                 <header className="flex items-center justify-between p-4">
                     <HomeButton />
                     <SideBar />
@@ -19,9 +19,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </main>
 
                 {/* 하단 영역 */}
-                <footer className="mt-auto">
+                {/* <footer className="mt-auto">
                     <BottomArea />
-                </footer>
+                </footer> */}
             </div>
         </div>
     )

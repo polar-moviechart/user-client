@@ -53,7 +53,6 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const navigate = useNavigate();
-  const { modalState, openModal, closeModal } = useModal();
 
   useEffect(() => {
     setRating(initialRating);
