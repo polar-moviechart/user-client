@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";  // 쿼리 파라미터를 가져오기 위한 훅
-import Layout from "../../components/Layout";
 import StarRating from "./StarRating";
 import MovieCard from "../../components/MovieCard";
 import transformStats from "./transformStats";
@@ -9,12 +8,11 @@ import { Chart, registerables } from "chart.js";
 import { DataPoint } from "../../components/chart/DataPoint";
 import { Dataset } from "../../components/chart/Dataset";
 import { StatType } from "../../apis/movie/type/StatType";
-import { useApiFetch } from "../../hooks/FetchApiFunc";
 import { MovieInfoDto } from "../../apis/movie/interfaces/MovieInfoDto";
 import { MovieStats } from "../../apis/movie/interfaces/MovieStats";
 import { MovieStatDto } from "../../apis/movie/interfaces/MovieStatDto";
 import Reviews from "../../components/review/Reviews";
-import { getMovie, getMovies, getMovieStats } from "../../apis/movie/MovieApiServicePublic";
+import { getMovie, getMovieStats } from "../../apis/movie/MovieApiServicePublic";
 
 Chart.register(...registerables);
 
@@ -61,24 +59,29 @@ export default function Movie({ Layout }: MovieProps) {
       setStatLoading(false);
     }
 
-    fetchStats();
+    if (statLoading === true) {
+      fetchStats();
+    }
 
-    const dataPoints: DataPoint[] = transformStats(movieStats);
-    const dataset: { labels: Date[], datasets: Dataset[] } = {
-      labels: dataPoints.map(point => point.x),
-      datasets: [
-        {
-          type: 'line',
-          label: '랭킹',
-          borderColor: 'rgb(255, 99, 132)',
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderWidth: 2,
-          data: dataPoints.map(point => point.y),
-        },
-      ],
-    };
-    setChartData(dataset);
-  }, [code]);
+    if (statLoading === false) {
+      console.log('set ChartData');
+      const dataPoints: DataPoint[] = transformStats(movieStats);
+      const dataset: { labels: Date[], datasets: Dataset[] } = {
+        labels: dataPoints.map(point => point.x),
+        datasets: [
+          {
+            type: 'line',
+            label: '랭킹',
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderWidth: 2,
+            data: dataPoints.map(point => point.y),
+          },
+        ],
+      };
+      setChartData(dataset);
+    }
+  }, [code, statLoading]);
 
   const cardWidth = "450px";
   const chartHeight = "250px";
