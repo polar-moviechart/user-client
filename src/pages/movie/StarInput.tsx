@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 interface LabelProps {
   isHalf?: boolean;
@@ -44,14 +45,33 @@ const Input = styled.input`
   display: none;
 `;
 
-const StarInput = ({ onClickRating, value, isHalf }) => {
+// const StarInput = ({ onClickRating, value, isHalf, ratingValue}) => {
+//   const handleClickRatingInput = () => {
+//     onClickRating(ratingValue);
+// };
+
+const StarInput: React.FC<{
+  value: number;
+  isHalf: boolean;
+  ratingValue: number;
+  onClickRating: (rating: number) => void;
+}> = ({ value, isHalf, ratingValue, onClickRating }) => {
+  const isChecked = value === ratingValue;
+
   const handleClickRatingInput = () => {
     onClickRating(value);
   };
 
   return (
     <>
-      <Input type="radio" name="rating" id={`star${value}`} value={value} />
+      <Input
+        type="radio"
+        name="rating"
+        id={`star${value}`}
+        value={value}
+        checked={isChecked} // 현재 별점과 value 비교
+        readOnly // 사용자가 직접 수정하지 못하도록
+      />
       <Label
         onClick={handleClickRatingInput}
         isHalf={isHalf}

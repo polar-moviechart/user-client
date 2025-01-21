@@ -40,14 +40,14 @@ export default function Movie({ Layout }: MovieProps) {
 
   const statType: StatType = 'RANKING';
 
-  useEffect(() => {
-    const fetchMovie = async () => {
-      setMovieLoading(true);
-      const response: MovieInfoDto = await getMovie(code);
-      setMovieInfo(response);
-      setMovieLoading(false);
-    };
+  const fetchMovie = async () => {
+    setMovieLoading(true);
+    const response: MovieInfoDto = await getMovie(code);
+    setMovieInfo(response);
+    setMovieLoading(false);
+  };
 
+  useEffect(() => {
     fetchMovie();
   }, [code]);
 
@@ -64,7 +64,6 @@ export default function Movie({ Layout }: MovieProps) {
     }
 
     if (statLoading === false) {
-      console.log('set ChartData');
       const dataPoints: DataPoint[] = transformStats(movieStats);
       const dataset: { labels: Date[], datasets: Dataset[] } = {
         labels: dataPoints.map(point => point.x),
@@ -82,6 +81,10 @@ export default function Movie({ Layout }: MovieProps) {
       setChartData(dataset);
     }
   }, [code, statLoading]);
+
+  const handleRatingComplete = () => {
+    fetchMovie();
+  }
 
   const cardWidth = "450px";
   const chartHeight = "250px";
@@ -101,7 +104,11 @@ export default function Movie({ Layout }: MovieProps) {
 
             <div className="flex flex-col items-center mt-4 mb-4">
               <p className="text-black">평점을 입력해주세요.</p>
-              <StarRating code={Number(code)} initialRating={movieInfo?.rating ?? 0} />
+              <StarRating
+                code={Number(code)}
+                initialRating={movieInfo?.rating ?? 0}
+                onRatingComplete={handleRatingComplete}
+                />
             </div>
           </div>
         </div>

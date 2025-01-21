@@ -7,7 +7,6 @@ import UserMovieApiServiceSecure from "../../apis/user/UserMovieApiServiceSecure
 import { getRtk, useJwtTokens } from "../../utils/authUtils";
 import { ApiResponse } from "../../apis/ApiResponse";
 import { RateResponse } from "../../apis/movie/interfaces/RateResponse";
-import useModal from "../../hooks/UseModal";
 
 const Base = styled.section`
   display: flex;
@@ -44,19 +43,25 @@ const RatingField = styled.fieldset`
 interface StarRatingProps {
   code: number,
   initialRating: number;
+  onRatingComplete: () => void;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
+const StarRating: React.FC<StarRatingProps> = ({ code, initialRating, onRatingComplete }) => {
   const { atk } = useJwtTokens();
-  const [rating, setRating] = useState<number>(initialRating);
+  const [rating, setRating] = useState<number>(0);
   const [tempRating, setTempRating] = useState<number>(0);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setRating(initialRating);
-  }, [initialRating]);
+    if (rating === 0) {
+      setRating(initialRating);
+    }
+    if (rating > 0) {
+      setRating(rating);
+    }
+  }, [initialRating, rating]);
 
   const handleLoginRedirect = () => {
     setShowLoginModal(false);
@@ -68,6 +73,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
     if (response.isSuccess) {
       alert('평가가 완료되었습니다.');
       setRating(response.data.rating);
+      onRatingComplete(); // 부모 컴포넌트의 콜백 호출
     } else {
       alert(response.errorMsg);
     }
@@ -87,7 +93,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
     setShowLoginModal(false);
     setShowRatingModal(false);
     setTempRating(0); // 취소 시 tempRating을 0으로 설정하여 0점 표시
-    setRating(initialRating); // 취소 시 rating을 0으로 설정하여 화면에 0점 반영
+    setRating(initialRating); // 취소 시 initialRating
   };
 
   const starValues = [
@@ -116,6 +122,7 @@ const StarRating: React.FC<StarRatingProps> = ({ code, initialRating }) => {
               }}
               value={value}
               isHalf={isHalf}
+              ratingValue={rating}
             />
           ))}
         </RatingField>

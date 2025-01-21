@@ -36,22 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-/* 커스텀 설정 */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-
-.container {
-  width: 100%;
-  max-width: 600px; /* 휴대폰 크기에 맞는 최대 너비 설정 */
-  margin: 0 auto;
-  padding: 10px;
-}
-
-@media (max-width: 600px) {
-  .container {
-    padding: 5px;
-  }
-}
