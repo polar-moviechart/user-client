@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import './Menu.css';
 import { Link } from "react-router-dom";
 import useModal from "../../hooks/UseModal";
@@ -7,16 +7,10 @@ import CustomModal from "../CustomModal";
 
 const SideBar = ({ width = 280 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [xPosition, setX] = useState(-width);
+    const sidebarRef = useRef<HTMLDivElement | null>(null);
 
     const toggleMenu = () => {
-        if (xPosition < 0) {
-            setX(0);
-            setIsMenuOpen(true);
-        } else {
-            setX(-width);
-            setIsMenuOpen(false);
-        }
+        setIsMenuOpen((prev) => !prev);
     };
 
     const { modalState, openModal, closeModal, onConfirm } = useModal();
@@ -32,12 +26,33 @@ const SideBar = ({ width = 280 }) => {
         }
     }
 
+    // 사이드바 바깥 클릭 감지
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                sidebarRef.current && // sidebarRef가 설정돼 있고
+                !sidebarRef.current.contains(event.target as Node) // 클릭이 사이드바 내부가 아닌 경우
+            ) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        // 클린업
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <div>
             <button onClick={toggleMenu} className="menu-button">
                 ☰
             </button>
-            <div className={`menu ${isMenuOpen ? 'open' : 'closed'}`}>
+            <div
+                ref={sidebarRef} 
+                className={`menu ${isMenuOpen ? 'open' : 'closed'}`}
+            >
                 <ul>
                     {isMenuOpen
                         ? <span onClick={toggleMenu}> X 닫기 </span>
