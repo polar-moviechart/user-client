@@ -18,9 +18,7 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
 
             const fetchWithRetry = async (): Promise<ApiResponse<T | null>> => {
                 const response: ApiResponse<T | null> = await safeApiCall(apiFunc);
-                // console.log(response)
                 if (response.code === 'T101' && rtk) {
-                    console.log('엑세스 토큰 만료')
                     await handleAtkExpired(rtk);
                     return apiFunc();
                 }
@@ -48,13 +46,9 @@ export function useApiFetch<T>(apiFunc: FetchApiFunc<T>) {
 }
 
 async function handleAtkExpired(rtk: string) {
-    console.log('handleAtkExpired');
-    console.log('rtk = ', rtk);
     const refreshedAtk = await UserApiServiceSecure.generateToken(rtk);
     if (refreshedAtk) {
-        // console.log('이전 atk = ', Cookies.get('polar-atk'));
         setAtk(refreshedAtk.data.accessToken);
-        // console.log('새로운 atk = ', Cookies.get('polar-atk'));
     } else {
         clearTokens();
         alert('세션이 만료되었습니다. 다시 로그인해 주세요.');

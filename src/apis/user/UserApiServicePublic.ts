@@ -14,7 +14,6 @@ export class UserApiServicePublic {
     }
 
     static async loginKakao(kakaoId: number): Promise<ApiResponse<LoginResponse>> {
-        console.log('kakaoId = ', kakaoId);
         return await axios.post(`${this.baseURL}/login/kakao`,
             { id: kakaoId })
             .then((response) => { return response.data });;
